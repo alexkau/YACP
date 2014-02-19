@@ -30,9 +30,14 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASES = {
-    'default': dj_database_url.parse(
-        os.environ.get('YACS_DATABASE_URL',
-                       'sqlite:////' + os.path.abspath('yacs.db')))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'yacp',                      
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost'
+    }
+
 }
 
 # Local time zone for this installation. Choices can be found here:
@@ -168,7 +173,9 @@ INSTALLED_APPS = (
     'scheduler',
     'api',
     'courses_viz',
+    'users',
 )
+AUTH_USER_MODEL = 'users.YacsUser'
 
 FROM_EMAIL = "no-reply@yacs.me"
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'

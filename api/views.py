@@ -19,6 +19,8 @@ from scheduler.domain import (
     ConflictCache, has_schedule, compute_schedules, period_stats
 )
 
+from users import YacsUser
+
 
 DEBUG = getattr(settings, 'DEBUG', False)
 
@@ -126,6 +128,11 @@ def selections(request, id=None, version=None, ext=None):
         section_ids=section_ids,
         blocked_times=blocked_times,
     )
+    if request.user:
+        yacs_user = YacsUser.objects.get(id=request.user)
+        yacs_user.saved_courses = selection
+        yacs_user.save()
+
     return {'context': selection.toJSON()}
 
 
