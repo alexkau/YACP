@@ -38,7 +38,14 @@ app.constant('CSRF_TOKEN', "{{ csrf_token }}");
 			<a href="" ng-click="click(item)">{% templatetag openvariable %}item.name{% templatetag closevariable %}</a>
 			</li>
 		</ul>
-		<a href="mailto:jeff@jeffhui.net?subject=YACS" class="feedback">Feedback</a>
+		<p class="feedback">
+			{% if user.is_authenticated %}
+				<a href="{% url 'django.contrib.auth.views.logout' %}">Log Out</a>
+			{% else %}
+				<a href="{% url 'django.contrib.auth.views.login' %}">Log In</a>
+			{% endif %}
+			 | <a href="mailto:jeff@jeffhui.net?subject=YACS">Feedback</a>
+		</p>
 	</div>
 	<div id="bd">
 		<form id="search" ng-controller="SearchCtrl" ng-show="searchOptions.visible">

@@ -30,9 +30,13 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASES = {
-    'default': dj_database_url.parse(
-        os.environ.get('YACS_DATABASE_URL',
-                       'sqlite:////' + os.path.abspath('yacs.db')))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'yacs', 
+        'USER': 'postgres',
+        'PASSWORD': 'password',
+        'HOST': 'localhost'
+    }
 }
 
 # Local time zone for this installation. Choices can be found here:
@@ -399,3 +403,8 @@ PIPELINE_JS = {
         'output_filename': 'app.js'
     },
 }
+
+
+
+
+LOGIN_REDIRECT_URL = '/'
