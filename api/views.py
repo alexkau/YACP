@@ -110,7 +110,10 @@ def raw_data(request, data, version=None, ext=None):
 @csrf_exempt
 @render()
 def selections(request, id=None, version=None, ext=None):
-    if request.method == 'GET' and id:
+    if request.method == 'GET' and request.user and request.user.planuser.selections:
+        selection = request.user.planuser.selections
+        return {'context': selection.toJSON()}
+    elif request.method == 'GET' and id:
         selection = SavedSelection.objects.get(id=id)
         return {'context': selection.toJSON()}
 
@@ -126,6 +129,9 @@ def selections(request, id=None, version=None, ext=None):
         section_ids=section_ids,
         blocked_times=blocked_times,
     )
+    if request.user:
+        request.user.planuser.selections = selection
+        request.user.planuser.save()
     return {'context': selection.toJSON()}
 
 
