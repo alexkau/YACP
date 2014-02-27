@@ -168,6 +168,7 @@ INSTALLED_APPS = (
     'scheduler',
     'api',
     'courses_viz',
+    'planner',
 )
 
 FROM_EMAIL = "no-reply@yacs.me"
