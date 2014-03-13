@@ -33,6 +33,26 @@ app.controller('CatalogCtrl', ['$q', '$scope', '$location', '$routeParams',
 					selection.apply($scope.courses);
 				});
 			};
+			
+			$scope.openRateMyProfessors = function(instructorsText){
+				var instructors = instructorsText.split("/");
+				var i = 0;
+				while (i < instructors.length) {
+					$.ajax({
+						type: "GET",
+						url: "/api/4/retrieve_rate_my_professors_url/",
+						data: {
+							instructor: instructors[i]
+						},
+						dataType: "text",
+						success: function(url) {
+							alert(url);
+							window.open(url);
+						}
+					});
+ 					i++;
+				}
+			};
 		});
 	});
 }]);
