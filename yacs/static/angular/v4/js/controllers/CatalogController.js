@@ -38,7 +38,6 @@ app.controller('CatalogCtrl', ['$q', '$scope', '$location', '$routeParams',
 				var instructors = instructorsText.split(", ");
 				var i = 0;
 				while (i < instructors.length) {
-					alert(instructors[i]);
 					$.ajax({
 						type: "GET",
 						url: "/api/4/retrieve_rate_my_professors_url/",
