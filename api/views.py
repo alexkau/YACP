@@ -320,11 +320,14 @@ def docs(request, template_name):
     
 @csrf_exempt
 @render()
-def retrieve_rate_my_professors_url(request=None, id=None, version=None):
-    #instructor = request.GET.get("instructor", None)
-    #url = RPIRateMyProfessors.getProfessorUrl(instructor)
-    #return HTTPResonse(url)
-    return {'test': 'test'}
+def retrieve_rate_my_professors_url(request, id=None, version=None):
+    instructor = request.GET.get("instructor", None)
+    if instructor:
+    	url = RPIRateMyProfessors.getProfessorUrl(instructor)
+    else:
+        url =""
+    context = {'url': url}
+    return {'context': context}
 
 
 ###########################################################################
