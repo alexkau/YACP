@@ -35,19 +35,19 @@ app.controller('CatalogCtrl', ['$q', '$scope', '$location', '$routeParams',
 			};
 			
 			$scope.openRateMyProfessors = function(instructorsText){
-				var instructors = instructorsText.split("/");
+				var instructors = instructorsText.split(", ");
 				var i = 0;
 				while (i < instructors.length) {
+					alert(instructors[i]);
 					$.ajax({
 						type: "GET",
 						url: "/api/4/retrieve_rate_my_professors_url/",
 						data: {
 							instructor: instructors[i]
 						},
-						dataType: "text",
+						dataType: "json",
 						success: function(url) {
-							alert(url);
-							window.open(url);
+							window.open(url["result"]["url"]);
 						}
 					});
  					i++;
