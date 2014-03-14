@@ -35,7 +35,7 @@ app.controller('CatalogCtrl', ['$q', '$scope', '$location', '$routeParams',
 			};
 			
 			$scope.openRateMyProfessors = function(instructorsText){
-				var instructors = instructorsText.split(", ");
+				var instructors = instructorsText.split(/, |\//);
 				var i = 0;
 				while (i < instructors.length) {
 					$.ajax({
