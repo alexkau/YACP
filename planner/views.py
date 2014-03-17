@@ -10,7 +10,6 @@ from fields import CappReportField
 from RPICappReport import *
 
 def addCoursesTaken(request):
-    # Handle file upload
     if request.method == 'POST':
         form = CappReportField(request.POST, request.FILES)
         if form.is_valid():
@@ -18,5 +17,5 @@ def addCoursesTaken(request):
             courses_taken= RPICappReport.getCoursesTaken(capp_report_html)
             return HttpResponse(', '.join(courses_taken))
     else:
-        form = CappReportField() # A empty, unbound form
+        form = CappReportField() 
     return render_to_response('planner/upload_capp.html', {'form': form}, context_instance=RequestContext(request))
