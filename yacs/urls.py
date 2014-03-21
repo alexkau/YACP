@@ -10,6 +10,7 @@ from courses.sitemaps import sitemaps
 from courses.views.newviews import redirect_to_latest_semester
 
 urlpatterns = patterns('',
+    url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^robots\.txt$', 'courses.views.newviews.robots_txt', name='robots'),
     url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}, name='sitemap'),
 

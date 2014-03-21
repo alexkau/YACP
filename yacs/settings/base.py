@@ -120,10 +120,10 @@ PASSWORD_HASHERS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'api.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    #'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     #'django.contrib.messages.middleware.MessageMiddleware',
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'api.middleware.AuthenticationMiddleware',
@@ -139,6 +139,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages",
     "django.core.context_processors.request",
+    "social.apps.django_app.context_processors.backends",
+    "social.apps.django_app.context_processors.login_redirect",
 )
 
 ROOT_URLCONF = 'yacs.urls'
@@ -173,6 +175,24 @@ INSTALLED_APPS = (
     'api',
     'courses_viz',
     'planner',
+    'social.apps.django_app.default',
+)
+
+SOCIAL_AUTH_FACEBOOK_KEY = '281728838659415'
+SOCIAL_AUTH_FACEBOOK_SECRET = 'd779a7a42fb1142deb7027035785ff75'
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'locale': 'en_US'}
+SOCIAL_AUTH_TWITTER_KEY = 'ZB7PB9zjWeEr5nTGsEPUKw'
+SOCIAL_AUTH_TWITTER_SECRET = 'kUONQeRKDkF6tGJbe25Nwt3pHJpmOZIk8ouEQPK5AM'
+
+AUTHENTICATION_BACKENDS = (
+    #'social.backends.facebook.FacebookOAuth2',
+    #'social.backends.facebook.FacebookAppOAuth2',
+    'social.backends.google.GoogleOpenId',
+    'social.backends.google.GoogleOAuth2',
+    'social.backends.google.GoogleOAuth',
+    'social.backends.twitter.TwitterOAuth',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 FROM_EMAIL = "no-reply@yacs.me"
