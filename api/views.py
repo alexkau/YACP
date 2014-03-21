@@ -19,6 +19,7 @@ from scheduler.domain import (
     ConflictCache, has_schedule, compute_schedules, period_stats
 )
 
+from RPIRateMyProfessors import *
 
 DEBUG = getattr(settings, 'DEBUG', False)
 
@@ -315,6 +316,18 @@ def docs(request, template_name):
         'semester': semesters[0],
         'department': departments[0],
     }, RequestContext(request))
+    
+    
+@csrf_exempt
+@render()
+def retrieve_rate_my_professors_url(request, id=None, version=None):
+    instructor = request.GET.get("instructor", None)
+    if instructor:
+    	url = RPIRateMyProfessors.getProfessorUrl(instructor)
+    else:
+        url =""
+    context = {'url': url}
+    return {'context': context}
 
 
 ###########################################################################

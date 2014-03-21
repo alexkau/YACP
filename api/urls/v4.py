@@ -45,6 +45,8 @@ urlpatterns = patterns('',
     url(r'^/conflicts' + ext_re, views.section_conflicts, api4, name='conflicts'),
     url(r'^/conflicts/(?P<id>\d+)/$', views.section_conflicts, api4, name='conflicts'),
     url(r'^/conflicts/(?P<id>\d+)' + ext_re, views.section_conflicts, api4, name='conflicts'),
+    
+    url(r'^/retrieve_rate_my_professors_url/', views.retrieve_rate_my_professors_url, api4, name='retrieve_rate_my_professors' ),
 
     # not official API... this is actually deprecated and may
     # be removed at any point
