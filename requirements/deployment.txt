@@ -16,3 +16,6 @@ pyconstraints==1.0.1
 python-dateutil==1.5
 pytz==2011c
 wsgiref==0.1.2
+RPICappReport==0.0.3
+RPIRateMyProfessors==0.1.1dev
+python-social-auth==0.1.22

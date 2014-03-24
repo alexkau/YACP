@@ -49,7 +49,9 @@
 					<label class="checkbox_content" for="section_{{section.id}}">
 						<p class="section-details">
 							<span class="number">Section {{section.numberText()}}</span>
-							<span class="instructors">{{section.instructorsText()}}</span>
+							<span class="instructors" 
+								ng-click="openRateMyProfessors(section.instructorsText())"
+								>{{section.instructorsText()}}</span>
 							<span class="seats">{{section.seatsLeftText()}}</span>
 						</p>
 						<ul class="section-times" ng-class="{expanded: section.hasMultipleTimesPerDay()}">

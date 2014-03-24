@@ -23,6 +23,8 @@
 	<td>{{ form.password }}</td>
 </tr>
 </table>
+<a href="{% url 'social:begin' "google" %}">Log in with Google</a><br>
+<a href="{% url 'social:begin' "twitter" %}">Log in with Twitter</a><br>
 
 <input type="submit" value="login" />
 <input type="hidden" name="next" value="{{ next }}" />
