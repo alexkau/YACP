@@ -306,6 +306,14 @@ def schedules(request, id=None, version=None):
     selection.save()
 
     return {'context': context}
+@csrf_exempt
+@render()
+def planner_courses(request, version=None):
+    if request.user.is_authenticated():
+        return {"context":[
+        {"name":x.course.name,"department_code":x.course.department.code,"prefix":x.course.number,"semester":x.semester}
+         for x in request.user.planuser.planner_courses.all()]}
+    return {"context":"Not logged in"}
 
 
 def docs(request, template_name):

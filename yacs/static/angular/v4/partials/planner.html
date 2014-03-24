@@ -1,0 +1,17 @@
+<div ng-if="logged_in">
+    <table class="planner-wrapper">
+        <tr>
+            <th>Fall</th><th>Spring</th>
+        </tr>
+        <tr ng-repeat="year in years" class="planner-row">
+            <td class="left-planner-col">
+            <div class="height-enforcer"></div>
+            <div ng-repeat="course in courses | filter: { semester: year }">{{course.name}}</div>
+            </td>
+            <td class="right-planner-col"></td>
+        </tr>
+    </table>
+    <h2>Courses not in planner:</h2>
+    <div><span ng-repeat="course in courses | filter: { semester: 0 }">{{course.name}}</span></div>
+</div>
+<div ng-if="!logged_in">Please log in.</div>

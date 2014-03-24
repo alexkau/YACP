@@ -58,4 +58,7 @@ urlpatterns = patterns('',
     # new pending API
     url(r'^/selections/$', views.selections, api4, name='saved-selections'),
     url(r'^/selections/(?P<id>\d+)/$', views.selections, api4, name='saved-selection'),
+
+    # planner urls
+    url(r'^/planner/courses/$',views.planner_courses, api4, name='planner-courses'),
 )

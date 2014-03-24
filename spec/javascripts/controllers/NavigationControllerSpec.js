@@ -46,7 +46,7 @@ describe("Controllers", function(){
 			}));
 
 			it("should sets the items on the scope", function(){
-				expect(_.pluck(scope.items, 'name')).toEqual(['Catalog', 'Selected']);
+				expect(_.pluck(scope.items, 'name')).toEqual(['Catalog', 'Selected','Planner']);
 			});
 
 			it("should set the selected item on the scope to Catalog", function(){
