@@ -32,9 +32,9 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'yacs', 
+        'NAME': 'yacp', 
         'USER': 'postgres',
-        'PASSWORD': 'password',
+        'PASSWORD': 'postgres',
         'HOST': 'localhost'
     }
 }
@@ -361,6 +361,7 @@ PIPELINE_CSS = {
             'v4/css/catalog.css',
             'v4/css/dept_list.css',
             'v4/css/schedules.css',
+            'v4/css/planner.css',
         ),
         'extra_context': {'media': 'screen,print'},
         'output_filename': 'ang.css',
@@ -413,6 +414,7 @@ PIPELINE_JS = {
             'v4/js/controllers/RootController.js',
             'v4/js/controllers/FooterController.js',
             'v4/js/controllers/NavigationController.js',
+            'v4/js/controllers/PlannerController.js',
             'v4/js/controllers/SearchController.js',
             'v4/js/controllers/SearchResultsController.js',
             'v4/js/controllers/DepartmentController.js',

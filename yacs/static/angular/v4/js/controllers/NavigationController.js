@@ -15,6 +15,11 @@ app.controller('NavCtrl', ['$scope', '$location', 'urlProvider',
 			path: urlProvider.selected(semester.year, semester.month),
 			controllers: ['SelectionCtrl']
 		};
+		var plannerItem = {
+			name: 'Planner',
+			path: urlProvider.planner(),
+			controllers: ['PlannerCtrl']
+		};
 
 		$scope.$watch('selection', function(selection){
 			if (selection){
@@ -22,7 +27,7 @@ app.controller('NavCtrl', ['$scope', '$location', 'urlProvider',
 			}
 		}, true);
 
-		$scope.items = [catalogItem, selectedItem];
+		$scope.items = [catalogItem, selectedItem, plannerItem];
 		$scope.selectedItem = catalogItem;
 		function updateSelection(route){
 			_($scope.items).each(function(item){

@@ -30,6 +30,10 @@ app.service('urlProvider', function(){
 	this.department = function(year, month, deptcode){
 		return url('semesters', year, month, deptcode.toUpperCase());
 	};
+
+	this.planner = function(){
+		return url('planner');
+	};
 });
 
 app.config(['$routeProvider', 'STATIC_URL', function($routeProvider, STATIC_URL){
@@ -49,6 +53,10 @@ app.config(['$routeProvider', 'STATIC_URL', function($routeProvider, STATIC_URL)
 	$routeProvider.when('/semesters/:year/:month/:dept/', {
 		templateUrl: STATIC_URL + 'v4/partials/catalog.html',
 		controller: 'CatalogCtrl'
+	});
+	$routeProvider.when('/planner/', {
+		templateUrl: STATIC_URL + 'v4/partials/planner.html',
+		controller: 'PlannerCtrl'
 	});
 	$routeProvider.when('/', {
 		templateUrl: STATIC_URL + 'v4/partials/departments.html',
