@@ -275,11 +275,14 @@ app.factory('Selection', ['$q', '$cookieStore', 'currentSemesterPromise',
 			var deferred = $q.defer();
 			storageKeyPromise.then(function(key){
 				$cookieStore.put(key, self.serialize());
+				var id = self.id
+				delete self.id
 				console.log("Saving" + self.serialize());
 
 				self.saveToServer().then(function(selection){
 					deferred.resolve(self);
 				});
+				self.id = id
 			});
 			return deferred.promise;
 		},

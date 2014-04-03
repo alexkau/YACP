@@ -15,6 +15,7 @@ from courses import models, views
 from courses import encoder as encoders
 
 from scheduler.models import SectionProxy, Selection, SectionConflict, SavedSelection
+from scheduler.utils import slugify, deserialize_numbers, serialize_numbers
 from scheduler.domain import (
     ConflictCache, has_schedule, compute_schedules, period_stats
 )
@@ -111,7 +112,7 @@ def raw_data(request, data, version=None, ext=None):
 @csrf_exempt
 @render()
 def selections(request, id=None, version=None, ext=None):
-    print request.POST
+    #print request.POST
     if request.method == 'GET' and request.user and request.user.is_authenticated() and request.user.planuser.selections:
         selection = request.user.planuser.selections
         return {'context': selection.toJSON()}
@@ -128,11 +129,27 @@ def selections(request, id=None, version=None, ext=None):
     blocked_times = request.POST.get('blocked_times', '').split(',')
     serialized = request.POST.get('serialized', '')
 
-    selection, created = SavedSelection.objects.get_or_create_by_data(
-        section_ids=section_ids,
-        blocked_times=blocked_times,
-        serialized=serialized,
+    internal_section_ids = serialize_numbers(section_ids)
+    internal_blocked_times = request.POST.get('blocked_times')
+
+    print "##"
+    print internal_section_ids
+    print internal_blocked_times
+    print serialized
+    print "##"
+
+    # selection, created = SavedSelection.objects.get_or_create_by_data(
+    #     section_ids=section_ids,
+    #     blocked_times=blocked_times,
+    #     serialized=serialized,
+    # )
+
+    selection, created = SavedSelection.objects.get_or_create(
+        internal_section_ids=internal_section_ids,
+        internal_blocked_times=internal_blocked_times,
+        internal_serialized=serialized,
     )
+
     if request.user and request.user.is_authenticated():
         request.user.planuser.selections = selection
         request.user.planuser.save()
