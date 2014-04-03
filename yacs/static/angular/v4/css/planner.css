@@ -1,9 +1,8 @@
-.left-planner-col {
-    border-right: 1px black solid;
-    min-width:150px;
+.planner-col {
+	border-right: 1px black solid;
 }
-.right-planner-col {
-    min-width:150px;
+.planner-col:last {
+	border:none;
 }
 .planner-row {
     border: 1px black solid;
@@ -13,4 +12,12 @@
 }
 .height-enforcer {
     min-height:30px;
+}
+.planner-wrapper {
+	min-width:500px;
+	float:left;
+}
+.not-in-planner {
+	float:left;
+	margin-left:30px;
 }

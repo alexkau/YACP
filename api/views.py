@@ -314,9 +314,18 @@ def schedules(request, id=None, version=None):
 @render()
 def planner_courses(request, version=None):
     if request.user.is_authenticated():
-        return {"context":[
-        {"name":x.course.name,"department_code":x.course.department.code,"prefix":x.course.number,"semester":x.semester}
-         for x in request.user.planuser.planner_courses.all()]}
+        # if the user does not have a capp report we will tell the user
+        if not request.user.planuser.first_semester:
+            return {"context":"No CAPP report"}
+        return {
+            "context":{
+                "courses":[{
+                    "department_code":x.department.code,"prefix":x.number,"semester":x.semester,"year":x.year}
+                    for x in request.user.planuser.planner_courses.all()],
+                "first_semester":request.user.planuser.first_semester,
+                "first_year":request.user.planuser.first_year
+            }
+        }
     return {"context":"Not logged in"}
 
 
