@@ -20,23 +20,10 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
         $scope.courses = response.data.result.courses;
         var semester_names = ["Spring","Summer","Fall"];
         var first_semester = response.data.result.first_semester;
-        if(first_semester == 0)
-        {
-            $scope.semester_names = [semester_names[0],semester_names[1],semester_names[2]];
-            $scope.semester_ids = [0,1,2];
-        }
-        else if(first_semester == 1)
-        {
-            $scope.semester_names = [semester_names[1],semester_names[2],semester_names[0]];
-            $scope.semester_ids = [1,2,0];
-        }
-        else
-        {
-            $scope.semester_names = [semester_names[2],semester_names[0],semester_names[1]];
-            $scope.semester_ids = [2,0,1];
-        }
+        $scope.semester_names = [semester_names[0],semester_names[1],semester_names[2]];
+        $scope.semester_ids = [0,1,2];
         var first_year = response.data.result.first_year; 
-        $scope.years = [first_year,first_year+1,first_year+2,first_year+3];
+        $scope.years = [first_year,first_year+1,first_year+2,first_year+3,first_year+4]; // TODO this should not be hardcoded
         $scope.has_capp = true;
     });
     $scope.showCAPPUploadForm = function()
