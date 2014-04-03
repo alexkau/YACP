@@ -12,10 +12,15 @@ class SavedSelectionManager(Manager):
         if 'blocked_times' in kwargs:
             tmp.blocked_times = kwargs.pop('blocked_times')
             kwargs['internal_blocked_times'] = tmp.internal_blocked_times
+        if 'serialized' in kwargs:
+            tmp.serialized = kwargs.pop('serialized')
+            kwargs['internal_serialized'] = tmp.serialized
         return kwargs
 
     def get_or_create_by_data(self, **kwargs):
         kwargs = self._update_kwargs(kwargs)
+        print "1"
+        print kwargs
         return self.get_or_create(**kwargs)
 
 
@@ -40,6 +45,7 @@ class SelectionManager(Manager):
         return super(SelectionManager, self).create(**kwargs)
 
     def get_or_create(self, **kwargs):
+        print "2"
         "Gets or creates a selection. If the selection is created, a slug is given to it."
         new_slug = None
         if 'slug' in kwargs:

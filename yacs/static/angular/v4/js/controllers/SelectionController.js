@@ -76,6 +76,47 @@ app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Select
 			}
 		}
 
+		function addClassTime(class_times, class_time){
+			var start = class_time[0][0] * (24 * 6) + (6) * class_time[0][1] + (class_time[0][2] / 10);
+			var end = class_time[1][0] * (24 * 6)+ (6) * class_time[1][1] + (class_time[1][2] / 10);
+			for (var i = 0; i < class_times.length; i++){
+				if(class_times[i][0] == start || class_times[i][1] == end)
+					return;
+			}
+			class_times.push(new Array(start, end));
+		}
+
+		function getAllClassTimes(schedules){
+			var all_class_times = new Array();
+			for (var i = 0; i < schedules.length; i++) {
+				var schedule = schedules[i];
+				var crns = schedule.crns;
+				var class_times = new Array();
+				for (var j=0; j<schedule.dows.length; j++) {
+					var blocks = schedule.blocks[schedule.dows[j]];
+					if (blocks){
+						for (var k=0; k<blocks.length; k++){
+							var sections = blocks[k].course.sections;
+							for (var l=0; l<sections.length; l++){
+								var section_times= sections[l].section_times;
+								if (crns.indexOf(sections[l].crn) != -1){ 
+									for (var m=0; m<section_times.length; m++){
+										if (section_times[m].days_of_the_week.indexOf(schedule.dows[j]) != -1){ 
+											var start_time= new Array(j, parseInt(section_times[m].start.split(":")[0]), parseInt(section_times[m].start.split(":")[1]));
+											var end_time= new Array(j, parseInt(section_times[m].end.split(":")[0]), parseInt(section_times[m].end.split(":")[1]));
+											addClassTime(class_times, new Array(start_time, end_time));
+										}
+									}
+								}
+							}	
+						}			
+					}
+				}
+				all_class_times.push(class_times);
+			}
+			return all_class_times;
+		}
+		
 		if (selection.numberOfCourses()){
 			CourseFetcher(filters).then(function(courses){
 				$scope.courses = courses;
@@ -141,6 +182,27 @@ app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Select
 
 		$scope.print = function(){
 			$window.print();
+		};
+
+		$scope.shortOrLongPeriods = function(schedules, short_or_long){
+			$scope.scheduleIndex = 0;
+			var all_class_times = getAllClassTimes(schedules);
+			$.ajax({
+				type: "GET",
+				url: "/semesters/schedules/getShortOrLongPeriods/",
+				data: {
+					schedules : JSON.stringify(all_class_times),
+					short_or_long : short_or_long
+				},
+				dataType: "json",
+				success: function(result) {
+					var updated_schedules=new Array();
+					for (var i = 0; i < result.length; i++)
+						updated_schedules.push(schedules[result[i]]);
+					$scope.schedules= updated_schedules;
+					updateUI(updated_schedules);
+				}
+			});
 		};
 
 		$scope.openRateMyProfessors = function(instructorsText){

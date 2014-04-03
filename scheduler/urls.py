@@ -5,6 +5,7 @@ import views
 
 urlpatterns = patterns('',
     url(r'^schedules/ics/$', views.icalendar, name='ics'),
+    url(r'^schedules/getShortOrLongPeriods/', views.getShortOrLongPeriods, name='getShortOrLongPeriods'),
     # selecting courses
     url(r'^(?P<year>[1-9]\d*)/(?P<month>[1-9]\d*)/selected/(?P<id>\d+)/$', views.SelectionSelectedCoursesListView.as_view(), name='selected-courses'),
     url(r'^(?P<year>[1-9]\d*)/(?P<month>[1-9]\d*)/schedules/(?P<id>\d+)/$', views.schedules_bootloader, name='schedules'),

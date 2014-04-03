@@ -11,5 +11,6 @@ test_reports/
 .coverage
 .ropeproject/
 yacs/settings/production.json
+yacs/settings/base.py
 yacs.db
 yacs.environment

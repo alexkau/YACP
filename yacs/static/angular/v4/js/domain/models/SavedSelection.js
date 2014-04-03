@@ -17,7 +17,8 @@ app.factory('SavedSelection', ['Utils', 'ModelFactory',
 		 serialize: function(){
 			 return {
 				 section_ids: _.values(this.selection).join(','),
-				 blocked_times: _.keys(this.blocked_times).join(',')
+				 blocked_times: _.keys(this.blocked_times).join(','),
+				 serialized: this.serialized,
 			 };
 		 }
 	 });
@@ -27,4 +28,5 @@ app.factory('SavedSelection', ['Utils', 'ModelFactory',
 }]);
 
 })(angular, app);
+
 

@@ -4,10 +4,11 @@
 
 app.factory('Selection', ['$q', '$cookieStore', 'currentSemesterPromise',
 			'currentCourses', 'scheduleValidator', 'Utils', '$timeout',
-			'SavedSelection', 'SectionTime',
+			'SavedSelection', 'SectionTime', 'apiClient', 'ModelFactory',
 			function($q, $cookieStore, currentSemesterPromise,
 					 currentCourses, scheduleValidator, Utils, $timeout,
-					 SavedSelection, SectionTime){
+					 SavedSelection, SectionTime, apiClient, ModelFactory){
+
 	var storageKeyPromise = currentSemesterPromise.then(function(semester){
 		return 'selection:' + semester.id;
 	});
@@ -36,14 +37,43 @@ app.factory('Selection', ['$q', '$cookieStore', 'currentSemesterPromise',
 		},
 		loadCurrent: function(){
 			return storageKeyPromise.then(function(key){
+				//console.log($cookieStore.get(key));
 				var selection;
 				try {
-					selection = Selection.deserialize($cookieStore.get(key))
+					selection = Selection.deserialize($cookieStore.get(key));
 				} catch(e) {
 					selection = new Selection();
 					console.warn('Failed to load selection, using empty one: ', e);
 				}
+				// console.log(selection);
+				var id = selection.id;
+				// console.log(selection.id);
+
+				$.ajax({
+					type: "GET",
+					url: "/api/4/getCurrentSelections/",
+					dataType: "json",
+					async: false,
+					success: function(result) {
+						// console.log("Result is");
+						// console.log(result.result.serialized);
+						if(result.result.serialized)
+						{
+							// console.log("Shouldn't be here");
+							selection = Selection.deserialize(result.result.serialized);
+							selection.id = id;
+							// console.log(Selection.deserialize(result.result.serialized));
+						}
+						// console.log('1');
+						// console.log(selection);
+					}
+				});
+				// console.log('done');
 				return selection;
+				// console.log('2');
+				// console.log(selection);
+		
+
 			});
 		},
 		loadCurrentWithId: function(){
@@ -257,8 +287,10 @@ app.factory('Selection', ['$q', '$cookieStore', 'currentSemesterPromise',
 			var self = this;
 			var savedSelection = new SavedSelection({
 				selection: self.courseIdsToSectionIds,
-				blocked_times: self.blockedTimes
+				blocked_times: self.blockedTimes,
+				serialized: self.serialize()
 			});
+			// console.log(savedSelection);
 
 			return savedSelection.save().then(function(savedSelection){
 				self.id = savedSelection.id;
@@ -270,10 +302,14 @@ app.factory('Selection', ['$q', '$cookieStore', 'currentSemesterPromise',
 			var deferred = $q.defer();
 			storageKeyPromise.then(function(key){
 				$cookieStore.put(key, self.serialize());
+				var id = self.id
+				delete self.id
+				// console.log("Saving" + self.serialize());
 
 				self.saveToServer().then(function(selection){
 					deferred.resolve(self);
 				});
+				self.id = id
 			});
 			return deferred.promise;
 		},

@@ -7,7 +7,7 @@ from django.db.models.signals import post_save
 
 class PlanUser(models.Model):
     user = models.OneToOneField(User,related_name="planuser")
-    selections = models.OneToOneField(SavedSelection,null=True,blank=True)
+    selections = models.ForeignKey(SavedSelection,null=True,blank=True)
     first_semester = models.IntegerField(null=True,blank=True) # 0 is Spring, 1 is Summer, 2 is Fall
     first_year = models.IntegerField(null=True,blank=True)
     def __unicode__(self):
