@@ -6,6 +6,8 @@
 
 <div class="schedules">
 	<div class="schedule" yacs-keydown="keyDown($event)" ng-show="schedules.length && courses.length">
+        <button ng-click="shortOrLongPeriods(schedules, 'short')">Short Periods</button>
+	<button ng-click="shortOrLongPeriods(schedules, 'long')">Long Periods</button>
 		<h2>
 			<span ng-show="schedule.crns.length">
 				<a href="" ng-click="previousSchedule()" class="prev-schedule">&larr;</a>

@@ -11,7 +11,10 @@ from django.template import RequestContext
 from django.conf import settings
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
+from django.utils import simplejson
+import json
 from icalendar import Calendar, Event, vText
+
 
 from courses.views import SemesterBasedMixin, SELECTED_COURSES_SESSION_KEY, AjaxJsonResponseMixin, SelectedCoursesListView
 from courses.models import Semester, SectionPeriod, Course, Section, Department
@@ -19,6 +22,7 @@ from courses.utils import dict_by_attr, ObjectJSONEncoder, sorted_daysofweek, DA
 from scheduler import models
 from scheduler.scheduling import compute_schedules
 
+import numpy
 
 ICAL_PRODID = getattr(settings, 'SCHEDULER_ICAL_PRODUCT_ID', '-//Jeff Hui//YACS Export 1.0//EN')
 SECTION_LIMIT = getattr(settings, 'SECTION_LIMIT', 60)
@@ -352,3 +356,25 @@ def icalendar(request):
     response['Content-Type'] = 'text/calendar'
     response['Content-Disposition'] = 'attachment;filename=schedule.ics'
     return response
+
+def getGaps(schedule):
+    gaps = []
+    for t1, t2, in zip(schedule,schedule[1:]):
+	gaps.append(t2[1] - t1[0])
+    return gaps
+
+def getPeriodsSortedByStd(schedules):
+    stds=[]
+    for i, schedule in enumerate(schedules):
+	stds.append((numpy.std(getGaps(schedule)), i))
+    stds.sort()
+    return  [i[1] for i in stds]
+
+def getShortOrLongPeriods(request):
+    schedules = json.loads(request.GET.get("schedules", None))
+    periods = getPeriodsSortedByStd(schedules)
+    if request.GET.get("short_or_long", None) == "short":
+    	shortOrLongPeriods = periods[:len(periods)/2]
+    else:
+	shortOrLongPeriods = periods[len(periods)/2:]
+    return HttpResponse(json.dumps(shortOrLongPeriods));
