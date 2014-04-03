@@ -12,6 +12,9 @@ class SavedSelectionManager(Manager):
         if 'blocked_times' in kwargs:
             tmp.blocked_times = kwargs.pop('blocked_times')
             kwargs['internal_blocked_times'] = tmp.internal_blocked_times
+        if 'serialized' in kwargs:
+            tmp.serialized = kwargs.pop('serialized')
+            #kwargs['internal_serialized'] = tmp.internal_serialized
         return kwargs
 
     def get_or_create_by_data(self, **kwargs):

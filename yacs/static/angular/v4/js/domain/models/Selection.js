@@ -8,6 +8,7 @@ app.factory('Selection', ['$q', '$cookieStore', 'currentSemesterPromise',
 			function($q, $cookieStore, currentSemesterPromise,
 					 currentCourses, scheduleValidator, Utils, $timeout,
 					 SavedSelection, SectionTime){
+
 	var storageKeyPromise = currentSemesterPromise.then(function(semester){
 		return 'selection:' + semester.id;
 	});
@@ -36,6 +37,7 @@ app.factory('Selection', ['$q', '$cookieStore', 'currentSemesterPromise',
 		},
 		loadCurrent: function(){
 			return storageKeyPromise.then(function(key){
+				console.log($cookieStore.get(key));
 				var selection;
 				try {
 					selection = Selection.deserialize($cookieStore.get(key))
@@ -43,6 +45,7 @@ app.factory('Selection', ['$q', '$cookieStore', 'currentSemesterPromise',
 					selection = new Selection();
 					console.warn('Failed to load selection, using empty one: ', e);
 				}
+
 				return selection;
 			});
 		},
@@ -257,8 +260,10 @@ app.factory('Selection', ['$q', '$cookieStore', 'currentSemesterPromise',
 			var self = this;
 			var savedSelection = new SavedSelection({
 				selection: self.courseIdsToSectionIds,
-				blocked_times: self.blockedTimes
+				blocked_times: self.blockedTimes,
+				serialized: self.serialize()
 			});
+			console.log(savedSelection);
 
 			return savedSelection.save().then(function(savedSelection){
 				self.id = savedSelection.id;
@@ -270,6 +275,7 @@ app.factory('Selection', ['$q', '$cookieStore', 'currentSemesterPromise',
 			var deferred = $q.defer();
 			storageKeyPromise.then(function(key){
 				$cookieStore.put(key, self.serialize());
+				console.log("Saving" + self.serialize());
 
 				self.saveToServer().then(function(selection){
 					deferred.resolve(self);

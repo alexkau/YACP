@@ -111,7 +111,8 @@ def raw_data(request, data, version=None, ext=None):
 @csrf_exempt
 @render()
 def selections(request, id=None, version=None, ext=None):
-    if request.method == 'GET' and request.user and request.user.planuser.selections:
+    print request.POST
+    if request.method == 'GET' and request.user and request.user.is_authenticated() and request.user.planuser.selections:
         selection = request.user.planuser.selections
         return {'context': selection.toJSON()}
     elif request.method == 'GET' and id:
@@ -125,12 +126,14 @@ def selections(request, id=None, version=None, ext=None):
 
     section_ids = int_list(request.POST.get('section_ids', '').split(','))
     blocked_times = request.POST.get('blocked_times', '').split(',')
+    serialized = request.POST.get('serialized', '')
 
     selection, created = SavedSelection.objects.get_or_create_by_data(
         section_ids=section_ids,
         blocked_times=blocked_times,
+        serialized=serialized,
     )
-    if request.user:
+    if request.user and request.user.is_authenticated():
         request.user.planuser.selections = selection
         request.user.planuser.save()
     return {'context': selection.toJSON()}
