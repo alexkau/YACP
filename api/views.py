@@ -155,6 +155,12 @@ def selections(request, id=None, version=None, ext=None):
         request.user.planuser.save()
     return {'context': selection.toJSON()}
 
+@csrf_exempt
+@render()
+def getCurrentSelections(request, id=None, version=None, ext=None):
+    if request.user and request.user.is_authenticated() and request.user.planuser.selections:
+        return {'context': request.user.planuser.selections.toJSON()}
+    return {}
 
 @csrf_exempt
 @render()
