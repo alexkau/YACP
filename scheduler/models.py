@@ -16,6 +16,7 @@ class SavedSelection(models.Model):
     "Represents a unique set of selected sections and blocked times."
     internal_section_ids = models.CommaSeparatedIntegerField(max_length=1024, db_index=True)
     internal_blocked_times = models.TextField(db_index=True)
+    internal_serialized = models.TextField(db_index=True)
 
     objects = managers.SavedSelectionManager()
 
@@ -45,6 +46,14 @@ class SavedSelection(models.Model):
         blocked_times = [section_time for section_time in blocked_times if section_time]
         self.internal_blocked_times = ','.join(blocked_times)
 
+    @property
+    def serialized(self):
+        return self.internal_serialized
+
+    @serialized.setter
+    def serialized(self, serialized):
+        self.internal_serialized = serialized
+
     def __unicode__(self):
         return "%r, %r, %r" % (self.id, self.section_ids, self.blocked_times)
 
@@ -53,6 +62,7 @@ class SavedSelection(models.Model):
             'id': self.id,
             'selection': self.selection_dict,
             'blocked_times': self.blocked_times,
+            'serialized': self.serialized,
         }
 
 
