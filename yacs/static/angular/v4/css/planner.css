@@ -21,3 +21,16 @@
 	float:left;
 	margin-left:30px;
 }
+#planner-courses {
+	border: 1px solid #666;
+	background: #ddd;
+	min-height: 100px;
+	width: 161px;
+}
+.planner-course {
+	padding: 3px;
+	border: 1px solid #aaa;
+	background: #efefef;
+	margin: 5px;
+	width: 145px;
+}

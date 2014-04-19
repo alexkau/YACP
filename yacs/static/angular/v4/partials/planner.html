@@ -7,7 +7,7 @@
         <tr ng-repeat="year in years" class="planner-row">
             <td class="planner-col">{{year}}</td>
             <td ng-repeat="semester in semester_ids" class="planner-col multiSortable">
-                <div ng-repeat="course in courses | filter: {year: year, semester: ''+semester}">
+                <div class="planner-course" ng-repeat="course in courses | filter: {year: year, semester: ''+semester}">
                     {{course.department_code}} {{course.prefix}}
                 </div>
             </td>
@@ -15,7 +15,7 @@
     </table>
     <div ng-if="has_capp" class="not-in-planner">
         <h1>Courses not in planner:</h2>
-        <div class='multiSortable' style='border: 1px solid #666; background: #ddd; min-height: 30px'>
+        <div class='multiSortable' id='planner-courses'>
             <div ng-repeat="course in courses | filter: { semester: -1 }">
             {{course.department_code}} {{course.prefix}}
             </div>
