@@ -47,6 +47,7 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
         });
     };
 
+    // Don't look. Nothing here to see. Move along.
     window.setTimeout(initSorting, 1000);
     
     $scope.showCAPPUploadForm = function()
