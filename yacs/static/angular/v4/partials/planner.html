@@ -15,7 +15,7 @@
     </table>
     <div ng-if="has_capp" class="not-in-planner">
         <h1>Courses not in planner:</h2>
-        <div class='multiSortable'>
+        <div class='multiSortable' style='border: 1px solid #666; background: #ddd; min-height: 30px'>
             <div ng-repeat="course in courses | filter: { semester: -1 }">
             {{course.department_code}} {{course.prefix}}
             </div>
