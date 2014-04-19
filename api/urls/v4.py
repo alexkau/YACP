@@ -61,8 +61,8 @@ urlpatterns = patterns('',
     url(r'^/selections/$', views.selections, api4, name='saved-selections'),
     url(r'^/selections/(?P<id>\d+)/$', views.selections, api4, name='saved-selection'),
 
-    url(r'^/getCurrentSelections/$',views.getCurrentSelections, api4, name='current-selections'),
+    url(r'^/getCurrentSelections/$', views.getCurrentSelections, api4, name='current-selections'),
 
     # planner urls
-    url(r'^/planner/courses/$',views.planner_courses, api4, name='planner-courses'),
+    url(r'^/planner/courses/$', views.planner_courses, api4, name='planner-courses'),
 )

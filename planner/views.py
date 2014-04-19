@@ -34,12 +34,16 @@ def addCoursesTaken(request):
                 x.year = x.term[:-2]
                 x.semester = map_month_to_semester(int(x.term[-2:]))
                 department = Department.objects.get(code=x.department_prefix)
-                new_plan_course = PlanCourse(year=x.year,semester=x.semester,
-                    user=request.user.planuser,department=department,number=x.course_number)
+                new_plan_course = PlanCourse(
+                    year=x.year, semester=x.semester,
+                    user=request.user.planuser, department=department,
+                    number=x.course_number
+                )
                 new_plan_course.save()
             return HttpResponseRedirect("/#/planner/");
     else:
         if request.user.planuser.first_semester:
             return HttpResponse("You have already uploaded a capp report")
         form = CappReportField()
-    return render_to_response('planner/upload_capp.html', {'form': form}, context_instance=RequestContext(request))
+    return render_to_response('planner/upload_capp.html', {'form': form}, 
+                                context_instance=RequestContext(request))

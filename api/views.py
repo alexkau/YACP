@@ -113,7 +113,9 @@ def raw_data(request, data, version=None, ext=None):
 @render()
 def selections(request, id=None, version=None, ext=None):
     #print request.POST
-    if request.method == 'GET' and request.user and request.user.is_authenticated() and request.user.planuser.selections:
+    if request.method == 'GET' and request.user \
+                                and request.user.is_authenticated() \
+                                and request.user.planuser.selections:
         selection = request.user.planuser.selections
         return {'context': selection.toJSON()}
     elif request.method == 'GET' and id:
@@ -132,18 +134,6 @@ def selections(request, id=None, version=None, ext=None):
     internal_section_ids = serialize_numbers(section_ids)
     internal_blocked_times = request.POST.get('blocked_times')
 
-    print "##"
-    print internal_section_ids
-    print internal_blocked_times
-    print serialized
-    print "##"
-
-    # selection, created = SavedSelection.objects.get_or_create_by_data(
-    #     section_ids=section_ids,
-    #     blocked_times=blocked_times,
-    #     serialized=serialized,
-    # )
-
     selection, created = SavedSelection.objects.get_or_create(
         internal_section_ids=internal_section_ids,
         internal_blocked_times=internal_blocked_times,
@@ -158,7 +148,8 @@ def selections(request, id=None, version=None, ext=None):
 @csrf_exempt
 @render()
 def getCurrentSelections(request, id=None, version=None, ext=None):
-    if request.user and request.user.is_authenticated() and request.user.planuser.selections:
+    if request.user and request.user.is_authenticated() \
+                    and request.user.planuser.selections:
         return {'context': request.user.planuser.selections.toJSON()}
     return {}
 
