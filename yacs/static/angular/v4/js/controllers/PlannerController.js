@@ -27,10 +27,25 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
         $scope.has_capp = true;
     });
 
+    var sendReceiveRequest = function(event, ui) {
+        var item = ui.item.context;
+        console.log($(item).closest("td").closest("tr").children(":first")[0].innerText);
+        console.log($(item).closest("td").index()-1);
+        console.log(item.innerText);
+        var res = $.post( "/api/4/planner/movecourse", {    course: item.innerText,
+                                    semester: $(item).closest("td").index()-1,
+                                    year: $(item).closest("td").closest("tr").children(":first")[0].innerText,
+        });
+        res.done(function( data ) {
+            console.log(data);
+        });
+    };
+
     var initSorting = function() {
         $('.multiSortable').sortable({
             items: '> div:not(.immovable)',
             connectWith: '.multiSortable',
+            receive: sendReceiveRequest,
         });
     };
 
