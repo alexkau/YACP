@@ -333,6 +333,7 @@ def planner_courses(request, version=None):
             return {"context":"No CAPP report"}
         return {
             "context":{
+                "has_uploaded_capp": request.user.planuser.has_uploaded_capp,
                 "courses":[{
                     "department_code":x.department.code,"prefix":x.number,"semester":x.semester,"year":x.year}
                     for x in request.user.planuser.planner_courses.all()],

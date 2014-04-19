@@ -25,6 +25,7 @@ def addCoursesTaken(request):
             plan_user = request.user.planuser
             plan_user.first_year = str(first_term)[:-2]
             plan_user.first_semester = map_month_to_semester(int(str(first_term[-2:])))
+            plan_user.has_uploaded_capp = True
             plan_user.save()
             for x in courses_taken:
                 if x.term == "Not Met" or len(x.term) != 6:
@@ -37,10 +38,10 @@ def addCoursesTaken(request):
                 new_plan_course = PlanCourse(
                     year=x.year, semester=x.semester,
                     user=request.user.planuser, department=department,
-                    number=x.course_number
+                    number=x.course_number, movable=False
                 )
                 new_plan_course.save()
-            return HttpResponseRedirect("/#/planner/");
+            return HttpResponseRedirect("/#/planner/")
     else:
         if request.user.planuser.first_semester:
             return HttpResponse("You have already uploaded a capp report")
