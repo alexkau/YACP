@@ -37,6 +37,12 @@ app.controller('CatalogCtrl', ['$q', '$scope', '$location', '$routeParams',
 				console.log(course);
 				$.post("/planner/add_course",{course:course.department.code+" "+course.number});
 			};
+			angular.forEach($scope.courses,function(course,i){
+				console.log(course);
+				$.post("/planner/is_in_planner",{course:course.department.code+" "+course.number},function(data){
+					$scope.courses[i].in_planner = (data == "True"); 
+				});
+			});
 			$scope.openRateMyProfessors = function(instructorsText){
 				var instructors = instructorsText.split(/, |\//);
 				var i = 0;

@@ -204,6 +204,10 @@ app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Select
 				}
 			});
 		};
+		$scope.addCourseToPlanner = function(course){
+			console.log(course);
+			$.post("/planner/add_course",{course:course.department.code+" "+course.number});
+		};
 
 		$scope.openRateMyProfessors = function(instructorsText){
 			var instructors = instructorsText.split(/, |\//);
