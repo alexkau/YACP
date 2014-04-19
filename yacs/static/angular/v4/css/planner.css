@@ -34,3 +34,9 @@
 	margin: 5px;
 	width: 145px;
 }
+.planner-course.immovable {
+	background: #ddd;
+}
+.notSortable {
+	background: #cfcfcf;
+}

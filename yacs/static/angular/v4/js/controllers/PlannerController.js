@@ -45,7 +45,33 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
         });
     };
 
+    var excludePast = function(data) {
+        console.log(data);
+    }
+
     var initSorting = function() {
+        $('.multiSortable.planner-col').each(function() {
+            var currentYear = (new Date).getFullYear();
+            var currentMonth = (new Date).getMonth();
+            if($(this).data("year") < currentYear) {
+                console.log("hi");
+                $(this).removeClass("multiSortable");
+                $(this).addClass("notSortable");
+            }
+            if($(this).data("year") == currentYear) {
+                if($(this).data("semester") == 0 && currentMonth >= 5) {
+                    $(this).removeClass("multiSortable");
+                    $(this).addClass("notSortable");
+                } else if($(this).data("semester") == 1 && currentMonth >= 7) {
+                    $(this).removeClass("multiSortable");
+                    $(this).addClass("notSortable");
+                }
+            }
+
+            // console.log($(this).data("year"));
+            // console.log($(this).data("semester"));
+            
+        });
         $('.multiSortable').sortable({
             items: '> div:not(.immovable)',
             connectWith: '.multiSortable',
