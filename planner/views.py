@@ -30,8 +30,7 @@ def getDifficulty(season, course_number, dept_code):
 
 def addCourseTaken(request, x):
     if x.term == "Not Met" or len(x.term) != 6:
-        return
-    print "test"
+         return
     x.department_prefix = x.name.split(" ")[0]
     x.course_number = x.name.split(" ")[1]
     x.year = x.term[:-2]
@@ -46,7 +45,6 @@ def addCourseTaken(request, x):
         fall_difficulty=fall_difficulty, spring_difficulty=spring_difficulty
     )
     new_plan_course.save()
-
 
 def addCoursesTaken(request):
     if not request.user.is_authenticated():
