@@ -35,7 +35,7 @@ def addCourseTaken(request, x):
     x.course_number = x.name.split(" ")[1]
     x.year = x.term[:-2]
     x.semester = map_month_to_semester(int(x.term[-2:]))
-    credits = Course.objects.filter(number=x.course_number, department__code=x.department_prefix).first().min_credits
+    credits = Course.objects.filter(number=x.course_number, department__code=x.department_prefix)[:1].get().min_credits
     fall_difficulty = getDifficulty("Fall", x.course_number, x.department_prefix)
     spring_difficulty = getDifficulty("Spring", x.course_number, x.department_prefix)
     department = Department.objects.get(code=x.department_prefix)
@@ -118,7 +118,7 @@ def addCourse(request):
         return HttpResponse("already in planner")
     fall_difficulty = getDifficulty("Fall", course_number, course_prefix)
     spring_difficulty = getDifficulty("Spring", course_number, course_prefix)
-    credits = Course.objects.filter(number=course_number, department=department).first().min_credits
+    credits = Course.objects.filter(number=course_number, department=department)[:1].get().min_credits
 
     plan_course = PlanCourse(user=request.user.planuser,number=course_number,department=department,
         year=year,semester=semester,fall_difficulty=fall_difficulty,spring_difficulty=spring_difficulty,credits=credits)
