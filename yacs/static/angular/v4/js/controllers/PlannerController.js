@@ -30,13 +30,10 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
     var sendReceiveRequest = function(event, ui) {
         var item = ui.item.context;
 
-        var course = console.log($(item).closest("td").closest("tr").children(":first")[0].innerText);
-        var semester = console.log($(item).closest("td").index()-1);
-        var year = console.log(item.innerText);
-        var res = $.post( "/planner/move_course", {    course: course,
-                                    semester: semester,
-                                    year: year,
-        });
+        var course = item.innerText;
+        var semester = $(item).closest("td").index()-1;
+        var year = $(item).closest("td").closest("tr").children(":first")[0].innerText;
+        var res = $.post( "/planner/move_course", { course: course, semester: semester, year: year });
         res.done(function( data ) {
             console.log(data);
         });
