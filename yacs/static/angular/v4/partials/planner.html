@@ -7,7 +7,7 @@
         <tr ng-repeat="year in years" class="planner-row">
             <td class="planner-col">{{year}}</td>
             <td ng-repeat="semester in semester_ids" class="planner-col multiSortable">
-                <div ng-class="{'immovable': !movable}" class="planner-course"  ng-repeat="course in courses | filter: {year: year, semester: ''+semester}">
+                <div class="planner-course"  ng-repeat="course in courses | filter: {year: year, semester: ''+semester}" ng-class="{'immovable': !course.movable}">
                     {{course.department_code}} {{course.prefix}}
                 </div>
             </td>
