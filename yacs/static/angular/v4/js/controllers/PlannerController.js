@@ -26,6 +26,32 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
         $scope.years = [first_year,first_year+1,first_year+2,first_year+3,first_year+4]; // TODO this should not be hardcoded
         $scope.has_capp = true;
     });
+
+    var sendReceiveRequest = function(event, ui) {
+        var item = ui.item.context;
+
+        var course = console.log($(item).closest("td").closest("tr").children(":first")[0].innerText);
+        var semester = console.log($(item).closest("td").index()-1);
+        var year = console.log(item.innerText);
+        var res = $.post( "/api/4/planner/movecourse", {    course: course,
+                                    semester: semester,
+                                    year: year,
+        });
+        res.done(function( data ) {
+            console.log(data);
+        });
+    };
+
+    var initSorting = function() {
+        $('.multiSortable').sortable({
+            items: '> div:not(.immovable)',
+            connectWith: '.multiSortable',
+            receive: sendReceiveRequest,
+        });
+    };
+
+    window.setTimeout(initSorting, 1000);
+    
     $scope.showCAPPUploadForm = function()
     {
         window.open ('/planner/upload_capp','_self',false);

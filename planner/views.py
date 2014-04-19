@@ -18,6 +18,7 @@ def addCoursesTaken(request):
     if request.method == 'POST':
         form = CappReportField(request.POST, request.FILES)
         if form.is_valid():
+
             capp_report_html = request.FILES['cappReportField'].read()
             courses_taken = RPICappReport.getCoursesTaken(capp_report_html)
             print_string = []
@@ -27,6 +28,10 @@ def addCoursesTaken(request):
             plan_user.first_semester = map_month_to_semester(int(str(first_term[-2:])))
             plan_user.has_uploaded_capp = True
             plan_user.save()
+
+            # Delete all previous records, if any exist
+            PlanCourse.objects.filter(user=plan_user).delete()
+
             for x in courses_taken:
                 if x.term == "Not Met" or len(x.term) != 6:
                     continue
@@ -43,8 +48,8 @@ def addCoursesTaken(request):
                 new_plan_course.save()
             return HttpResponseRedirect("/#/planner/")
     else:
-        if request.user.planuser.first_semester:
-            return HttpResponse("You have already uploaded a capp report")
+        # if request.user.planuser.first_semester:
+        #     return HttpResponse("You have already uploaded a capp report")
         form = CappReportField()
     return render_to_response('planner/upload_capp.html', {'form': form}, 
                                 context_instance=RequestContext(request))
