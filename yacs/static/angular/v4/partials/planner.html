@@ -1,9 +1,11 @@
 <div ng-if="logged_in">
     <table class="planner-wrapper">
         <tr>
+            <th></th>
             <th ng-repeat="semester_name in semester_names">{{semester_name}}</th>
         </tr>
         <tr ng-repeat="year in years" class="planner-row">
+            <td class="planner-col">{{year}}</td>
             <td ng-repeat="semester in semester_ids" class="planner-col">
             <div class="height-enforcer"></div>
             <div ng-repeat="course in courses | filter: {year: year, semester: ''+semester}">
