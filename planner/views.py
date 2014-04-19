@@ -58,7 +58,7 @@ def addCoursesTaken(request):
                 new_plan_course = PlanCourse(
                     year=x.year, semester=x.semester,
                     user=request.user.planuser, department=department,
-                    number=x.course_number, movable=False
+                    number=x.course_number, movable=False,
                     fall_difficulty=fall_difficulty, spring_difficulty=spring_difficulty
                 )
                 new_plan_course.save()
