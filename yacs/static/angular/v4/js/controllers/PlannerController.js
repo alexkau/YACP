@@ -31,8 +31,14 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
         var item = ui.item.context;
 
         var course = item.innerText;
-        var semester = $(item).closest("td").index()-1;
-        var year = $(item).closest("td").closest("tr").children(":first")[0].innerText;
+        if($(item).parent().attr("id") == "planner-courses") {
+            var semester = -1;
+            var year = -1;
+        } else {
+            var semester = $(item).closest("td").index()-1;
+            var year = $(item).parent().parent().children(":first")[0].innerText;            
+        }
+
         var res = $.post( "/planner/move_course", { course: course, semester: semester, year: year });
         res.done(function( data ) {
             console.log(data);
