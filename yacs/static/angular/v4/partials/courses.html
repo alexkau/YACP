@@ -49,29 +49,31 @@
 						analytics-category="section"
 						analytics-label="{{ section.id }}"
 						/>
-					<label class="checkbox_content" for="section_{{section.id}}">
-						<p class="section-details">
+					<p class="section-details">
+						<label for="section_{{section.id}}">
 							<span class="number">Section {{section.numberText()}}</span>
-							<span class="instructors" 
-								ng-click="openRateMyProfessors(section.instructorsText())"
-								>{{section.instructorsText()}}</span>
+						</label>
+						<span class="instructors" 
+							ng-click="openRateMyProfessors(section.instructorsText())"
+							>{{section.instructorsText()}}</span>
+						<label for="section_{{section.id}}">
 							<span class="seats">{{section.seatsLeftText()}}</span>
-						</p>
-						<ul class="section-times" ng-class="{expanded: section.hasMultipleTimesPerDay()}">
-							<li class="section-time" ng-class="time.classes" ng-repeat="time in section.times track by time.day_of_the_week">
-							<span class="dow">{{time.day_of_the_week}}</span>
-							<span class="time" ng-repeat="section_time in time.section_times track by $index">
-								{{section_time.text()}}
-							</span>
-							</li>
-						</ul>
-						<p class="section_conflict" ng-show="section.conflicts.length > 0">
-						Conflicts with
-						<span ng-repeat="conflict_name in section.conflicts track by $index">
-							{{ conflict_name }}{{{true: '', false: ', '}[$last]}}
+						</label>
+					</p>
+					<ul class="section-times" ng-class="{expanded: section.hasMultipleTimesPerDay()}">
+						<li class="section-time" ng-class="time.classes" ng-repeat="time in section.times track by time.day_of_the_week">
+						<span class="dow">{{time.day_of_the_week}}</span>
+						<span class="time" ng-repeat="section_time in time.section_times track by $index">
+							{{section_time.text()}}
 						</span>
-						</p>
-					</label>
+						</li>
+					</ul>
+					<p class="section_conflict" ng-show="section.conflicts.length > 0">
+					Conflicts with
+					<span ng-repeat="conflict_name in section.conflicts track by $index">
+						{{ conflict_name }}{{{true: '', false: ', '}[$last]}}
+					</span>
+					</p>
 				</li>
 			</ul>
 
