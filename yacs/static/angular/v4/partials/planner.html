@@ -22,6 +22,8 @@
         </div>
         <h2>Use the catalog to add courses here</h2>
     </div>
-    <div ng-if="!has_capp"><a href="" ng-click="showCAPPUploadForm()">Upload CAPP Report</a></div>
+    <!--<div ng-if="!has_capp"><a href="" ng-click="showCAPPUploadForm()">Upload CAPP Report</a></div>-->
+    <div ng-if="!has_capp">You have already uploaded a CAPP report. Uploading a new one will delete your current data!</div>
+    <a href="" ng-click="showCAPPUploadForm()">Upload CAPP Report</a>
 </div>
 <div ng-if="!logged_in">Please log in.</div>
