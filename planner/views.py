@@ -81,7 +81,7 @@ def addCourse(request):
     course_number = int(request.POST["course"].split(" ")[1])
     department = Department.objects.get(code=course_prefix)
     exists = PlanCourse.objects.filter(user=request.user.planuser,
-        number=course_number,department=department,year=year,semester=semester).count() > 0
+        number=course_number,department=department).count() > 0
     if exists:
         return HttpResponse("already in planner")
     plan_course = PlanCourse(user=request.user.planuser,number=course_number,department=department,year=year,semester=semester)
