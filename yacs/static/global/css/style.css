@@ -417,3 +417,10 @@ http://drupal.org/node/897638
 */
 
 /* 18.CUSTOM */
+
+#planner-courses {
+	border: 1px solid #666;
+	background: #ddd;
+	min-height: 30px;
+	width: 150px;
+}
