@@ -26,6 +26,16 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
         $scope.years = [first_year,first_year+1,first_year+2,first_year+3,first_year+4]; // TODO this should not be hardcoded
         $scope.has_capp = true;
     });
+
+    var initSorting = function() {
+        $('.multiSortable').sortable({
+            items: '> div:not(.immovable)',
+            connectWith: '.multiSortable',
+        });
+    };
+
+    window.setTimeout(initSorting, 1000);
+    
     $scope.showCAPPUploadForm = function()
     {
         window.open ('/planner/upload_capp','_self',false);
