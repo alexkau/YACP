@@ -33,7 +33,10 @@ app.controller('CatalogCtrl', ['$q', '$scope', '$location', '$routeParams',
 					selection.apply($scope.courses);
 				});
 			};
-			
+			$scope.addCourseToPlanner = function(course){
+				console.log(course);
+				$.post("/planner/add_course",{course:course.department.code+" "+course.number});
+			};
 			$scope.openRateMyProfessors = function(instructorsText){
 				var instructors = instructorsText.split(/, |\//);
 				var i = 0;

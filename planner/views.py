@@ -65,3 +65,25 @@ def moveCourse(request):
     plan_course.semester = semester
     plan_course.save()
     return HttpResponse("success")
+
+@csrf_exempt
+def addCourse(request):
+    if "year" in request.POST:
+        year = request.POST["year"]
+    else:
+        year = -1
+    if "semester" in request.POST:
+        semester = request.POST["semester"]
+    else:
+        semester = -1
+
+    course_prefix = request.POST["course"].split(" ")[0]
+    course_number = int(request.POST["course"].split(" ")[1])
+    department = Department.objects.get(code=course_prefix)
+    exists = PlanCourse.objects.filter(user=request.user.planuser,
+        number=course_number,department=department,year=year,semester=semester).count() > 0
+    if exists:
+        return HttpResponse("already in planner")
+    plan_course = PlanCourse(user=request.user.planuser,number=course_number,department=department,year=year,semester=semester)
+    plan_course.save()
+    return HttpResponse("success")

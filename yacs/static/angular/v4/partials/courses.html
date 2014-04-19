@@ -6,6 +6,9 @@
 	<div class="course"
 		ng-class="{conflict: course.conflicts.length}"
 		ng-repeat="course in courses track by course.id">
+		<div id="add_to_planner" ng-if="!course.in_planner">
+			<input type="button" ng-click="addCourseToPlanner(course)" value="Add course to planner"/>
+		</div>
 		<input type="checkbox" class="checkbox" id="course_{{course.id}}" name="course_{{course.id}}"
 			ng-model="course.is_selected"
 			ng-click="clickCourse(course)"
