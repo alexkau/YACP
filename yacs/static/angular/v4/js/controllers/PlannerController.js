@@ -29,12 +29,13 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
 
     var sendReceiveRequest = function(event, ui) {
         var item = ui.item.context;
-        console.log($(item).closest("td").closest("tr").children(":first")[0].innerText);
-        console.log($(item).closest("td").index()-1);
-        console.log(item.innerText);
-        var res = $.post( "/api/4/planner/movecourse", {    course: item.innerText,
-                                    semester: $(item).closest("td").index()-1,
-                                    year: $(item).closest("td").closest("tr").children(":first")[0].innerText,
+
+        var course = console.log($(item).closest("td").closest("tr").children(":first")[0].innerText);
+        var semester = console.log($(item).closest("td").index()-1);
+        var year = console.log(item.innerText);
+        var res = $.post( "/api/4/planner/movecourse", {    course: course,
+                                    semester: semester,
+                                    year: year,
         });
         res.done(function( data ) {
             console.log(data);
