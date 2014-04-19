@@ -3,7 +3,7 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
-
+from django.views.decorators.csrf import csrf_exempt
 from models import PlanUser,PlanCourse
 from fields import CappReportField
 from utils import map_month_to_semester
@@ -53,3 +53,15 @@ def addCoursesTaken(request):
         form = CappReportField()
     return render_to_response('planner/upload_capp.html', {'form': form}, 
                                 context_instance=RequestContext(request))
+@csrf_exempt
+def moveCourse(request):
+    course_prefix = request.POST["course"].split(" ")[0]
+    course_number = int(request.POST["course"].split(" ")[1])
+    semester = request.POST["semester"]
+    year = request.POST["year"]
+    department = Department.objects.get(code=course_prefix)
+    plan_course = request.user.planuser.planner_courses.get(number=course_number,department=department)
+    plan_course.year = year
+    plan_course.semester = semester
+    plan_course.save()
+    return HttpResponse("success")
