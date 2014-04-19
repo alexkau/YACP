@@ -33,7 +33,7 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
         var course = console.log($(item).closest("td").closest("tr").children(":first")[0].innerText);
         var semester = console.log($(item).closest("td").index()-1);
         var year = console.log(item.innerText);
-        var res = $.post( "/api/4/planner/move_course", {    course: course,
+        var res = $.post( "/planner/move_course", {    course: course,
                                     semester: semester,
                                     year: year,
         });
