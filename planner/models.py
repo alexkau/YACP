@@ -21,6 +21,8 @@ class PlanCourse(models.Model):
     department = models.ForeignKey(Department)
     number = models.IntegerField()
     user = models.ForeignKey(PlanUser,related_name="planner_courses")
+    spring_difficulty = models.DecimalField(max_digits=2, decimal_places=1, null=True)
+    fall_difficulty = models.DecimalField(max_digits=2, decimal_places=1, null=True)
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

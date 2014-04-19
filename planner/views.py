@@ -8,9 +8,22 @@ from models import PlanUser,PlanCourse
 from fields import CappReportField
 from utils import map_month_to_semester
 
-from courses.models import Course,Department
+from courses.models import Course,Department,Section
+
+from decimal import *
 
 from RPICappReport import *
+from RPIRateMyProfessors import *
+
+def getDifficulty(season, course_number, dept_code):
+    try:
+        sections = Section.objects.filter(semester__name__startswith=season,  course__number=course_number, course__department__code=dept_code)
+        section = list(sections)[0]
+        section_time = list(section.section_times.all().exclude(instructor="Staff"))[0]
+        difficulty_str = RPIRateMyProfessors.getProfessorDifficulty(section_time.instructor)
+        return Decimal(difficulty_str)
+    except:
+        return None
 
 def addCoursesTaken(request):
     if not request.user.is_authenticated():
@@ -33,9 +46,12 @@ def addCoursesTaken(request):
                 x.course_number = x.name.split(" ")[1]
                 x.year = x.term[:-2]
                 x.semester = map_month_to_semester(int(x.term[-2:]))
+                fall_difficulty = getDifficulty("Fall", x.course_number, x.department_prefix)
+                spring_difficulty = getDifficulty("Spring", x.course_number, x.department_prefix)
                 department = Department.objects.get(code=x.department_prefix)
                 new_plan_course = PlanCourse(year=x.year,semester=x.semester,
-                    user=request.user.planuser,department=department,number=x.course_number)
+                    user=request.user.planuser,department=department,number=x.course_number, 
+                    fall_difficulty=fall_difficulty, spring_difficulty=spring_difficulty)
                 new_plan_course.save()
             return HttpResponseRedirect("/#/planner/");
     else:
