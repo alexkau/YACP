@@ -25,6 +25,7 @@ class PlanCourse(models.Model):
     movable = models.BooleanField(default=True)
     spring_difficulty = models.DecimalField(max_digits=2, decimal_places=1, null=True)
     fall_difficulty = models.DecimalField(max_digits=2, decimal_places=1, null=True)
+    credits = models.IntegerField(default=4)
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
