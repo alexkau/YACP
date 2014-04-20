@@ -33,9 +33,13 @@ app.controller('CatalogCtrl', ['$q', '$scope', '$location', '$routeParams',
 					selection.apply($scope.courses);
 				});
 			};
+			$scope.remove_just_added = function(course){course.just_added = false};
 			$scope.addCourseToPlanner = function(course){
 				console.log(course);
 				$.post("/planner/add_course",{course:course.department.code+" "+course.number});
+				course.in_planner = true;
+				course.just_added = true;
+				$timeout(function(){$scope.remove_just_added(course)},1000);
 			};
 			angular.forEach($scope.courses,function(course,i){
 				console.log(course);

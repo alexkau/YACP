@@ -4,10 +4,10 @@
 
 app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Selection',
 			   'currentSemesterPromise', 'CourseFetcher', 'schedulePresenter',
-			   'SectionTime', 'searchOptions', 'ICAL_URL',
+			   'SectionTime', 'searchOptions', 'ICAL_URL','$timeout',
 			   function($window, $scope, $q, $location, Selection,
 						currentSemesterPromise, CourseFetcher, schedulePresenter,
-						SectionTime, searchOptions, ICAL_URL){
+						SectionTime, searchOptions, ICAL_URL,$timeout){
 	$scope.courses = [];
 	$scope.emptyText = "You didn't select any courses. They would go here.";
 	$scope.scheduleIndex = 0;
@@ -61,6 +61,13 @@ app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Select
 		function refreshAndSave(shouldSave){
 			function refresh(){
 				selection.apply($scope.courses);
+				angular.forEach($scope.courses,function(course,i){
+					console.log(course);
+					$.post("/planner/is_in_planner",{course:course.department.code+" "+course.number},function(data){
+						$scope.courses[i].in_planner = (data == "True"); 
+					});
+				});
+
 				var schedulesPromise = selection.schedules(_.values(selection.blockedTimes));
 				var promise = schedulePresenter(schedulesPromise, _.values(selection.allBlockedTimes()));
 				promise.then(function(schedules){
@@ -204,11 +211,14 @@ app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Select
 				}
 			});
 		};
+		$scope.remove_just_added = function(course){course.just_added = false};
 		$scope.addCourseToPlanner = function(course){
 			console.log(course);
 			$.post("/planner/add_course",{course:course.department.code+" "+course.number});
+			course.in_planner = true;
+			course.just_added = true;
+			$timeout(function(){$scope.remove_just_added(course)},1000);
 		};
-
 		$scope.openRateMyProfessors = function(instructorsText){
 			var instructors = instructorsText.split(/, |\//);
 			var i = 0;
