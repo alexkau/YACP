@@ -28,9 +28,10 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
     });
 
     var sendReceiveRequest = function(event, ui) {
+        $(".alert").alert();
         var item = ui.item.context;
-
         var course = item.innerText;
+
         if($(item).parent().attr("id") == "planner-courses") {
             var semester = -1;
             var year = -1;
@@ -39,26 +40,33 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
             var year = $(item).parent().parent().children(":first")[0].innerText;            
         }
 
-        var res = $.post( "/planner/move_course", { course: course, semester: semester, year: year });
-        res.done(function( data ) {
-            console.log(data);
+        var creditsThisSemester = 0
+        $(item).parent().children().each(function(){
+            creditsThisSemester += $(this).data("credits");
         });
-    };
+        if(creditsThisSemester > 21)
+        {
+            alert("Warning: This semester has more than 21 credits.");
+        }
 
-    var excludePast = function(data) {
-        console.log(data);
-    }
+        // Move course in DB to new location
+        var res = $.post( "/planner/move_course", { course: course, semester: semester, year: year });
+        // res.done(function( data ) {
+        //     console.log(data);
+        // });
+    };
 
     var initSorting = function() {
         $('.multiSortable.planner-col').each(function() {
             var currentYear = (new Date).getFullYear();
             var currentMonth = (new Date).getMonth();
+            // Exclude all semesters that have ended
             if($(this).data("year") < currentYear) {
-                console.log("hi");
                 $(this).removeClass("multiSortable");
                 $(this).addClass("notSortable");
             }
             if($(this).data("year") == currentYear) {
+                // Months are zero-indexed
                 if($(this).data("semester") == 0 && currentMonth >= 5) {
                     $(this).removeClass("multiSortable");
                     $(this).addClass("notSortable");
@@ -67,11 +75,8 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
                     $(this).addClass("notSortable");
                 }
             }
-
-            // console.log($(this).data("year"));
-            // console.log($(this).data("semester"));
-            
         });
+        // Init sortables
         $('.multiSortable').sortable({
             items: '> div:not(.immovable)',
             connectWith: '.multiSortable',

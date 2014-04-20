@@ -324,6 +324,7 @@ def schedules(request, id=None, version=None):
     selection.save()
 
     return {'context': context}
+
 @csrf_exempt
 @render()
 def planner_courses(request, version=None):
@@ -335,8 +336,10 @@ def planner_courses(request, version=None):
             "context":{
                 "has_uploaded_capp": request.user.planuser.has_uploaded_capp,
                 "courses":[{
-                    "department_code":x.department.code,"prefix":x.number,"semester":x.semester,"year":x.year,
-                    "movable":x.movable,"credits":x.credits}
+                    "department_code":x.department.code, "prefix":x.number,
+                    "semester":x.semester, "year":x.year, "movable":x.movable,
+                    "credits":x.credits, "fall_difficulty": str(x.fall_difficulty),
+                    "spring_difficulty": str(x.spring_difficulty)}
                     for x in request.user.planuser.planner_courses.all()],
                 "first_semester":request.user.planuser.first_semester,
                 "first_year":request.user.planuser.first_year

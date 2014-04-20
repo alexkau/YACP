@@ -4,39 +4,65 @@
 .planner-col:last {
 	border:none;
 }
+.planner-col.semester {
+	width: 330px;
+}
 .planner-row {
     border: 1px black solid;
 }
 .planner-wrapper {
     border: 1px black solid;
 }
-.height-enforcer {
-    min-height:30px;
-}
 .planner-wrapper {
 	min-width:500px;
 	float:left;
-}
-.not-in-planner {
-	float:left;
-	margin-left:30px;
 }
 #planner-courses {
 	border: 1px solid #666;
 	background: #ddd;
 	min-height: 100px;
-	width: 161px;
+	width: 330px;
 }
 .planner-course {
 	padding: 3px;
 	border: 1px solid #aaa;
 	background: #efefef;
 	margin: 5px;
-	width: 145px;
+	width: 318px;
 }
 .planner-course.immovable {
 	background: #ddd;
 }
+.planner-col .year, .semester-name span {
+	display: block;
+	padding: 10px;
+	text-align: center;
+}
+.planner-course span {
+	display: inline-block;
+}
+.planner-course .courseinfo {
+	width: 110px;
+}
+.planner-course .credits {
+	width: 90px;
+}
+
 .notSortable {
 	background: #cfcfcf;
+}
+
+.leftcol {
+	float: left;
+	width: 1049px;
+	margin-left: -100%;
+}
+.rightcol {
+	float: left;
+	width: 100%;
+	display: block;
+	padding: 20px;
+}
+.rightcontent {
+	margin-left: 1050px;
 }
