@@ -22,7 +22,7 @@ from courses.utils import dict_by_attr, ObjectJSONEncoder, sorted_daysofweek, DA
 from scheduler import models
 from scheduler.scheduling import compute_schedules
 
-import numpy
+import math
 
 ICAL_PRODID = getattr(settings, 'SCHEDULER_ICAL_PRODUCT_ID', '-//Jeff Hui//YACS Export 1.0//EN')
 SECTION_LIMIT = getattr(settings, 'SECTION_LIMIT', 60)
@@ -357,24 +357,27 @@ def icalendar(request):
     response['Content-Disposition'] = 'attachment;filename=schedule.ics'
     return response
 
-def getGaps(schedule):
-    gaps = []
+def assignPointsForGaps(schedule):
+    points = []
     for t1, t2, in zip(schedule,schedule[1:]):
-	gaps.append(t2[1] - t1[0])
-    return gaps
+        gap = t2[0] - t1[1]
+        print gap
+        if gap<18:
+	    points.append(pow(1, 1.0/(gap/6.0)))
+    return points
 
-def getPeriodsSortedByStd(schedules):
-    stds=[]
+def sortSchedulesByGaps(schedules):
+    sorted_schedules=[]
     for i, schedule in enumerate(schedules):
-	stds.append((numpy.std(getGaps(schedule)), i))
-    stds.sort()
-    return  [i[1] for i in stds]
+	sorted_schedules.append((sum(assignPointsForGaps(sorted(schedule))), i))
+    sorted_schedules.sort()
+    return  [i[1] for i in sorted_schedules]
 
 def getShortOrLongPeriods(request):
     schedules = json.loads(request.GET.get("schedules", None))
-    periods = getPeriodsSortedByStd(schedules)
+    periods = sortSchedulesByGaps(schedules)
     if request.GET.get("short_or_long", None) == "short":
-    	shortOrLongPeriods = periods[:len(periods)/2]
+    	shortOrLongPeriods = periods[len(periods)/2:]
     else:
-	shortOrLongPeriods = periods[len(periods)/2:]
-    return HttpResponse(json.dumps(shortOrLongPeriods));
+	shortOrLongPeriods = periods[:len(periods)/2]
+    return HttpResponse(json.dumps(shortOrLongPeriods))
