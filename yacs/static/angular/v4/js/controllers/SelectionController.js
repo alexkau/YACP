@@ -72,6 +72,7 @@ app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Select
 				var promise = schedulePresenter(schedulesPromise, _.values(selection.allBlockedTimes()));
 				promise.then(function(schedules){
 					$scope.schedules = schedules;
+                             		$scope.allSchedules= $scope.schedules.slice(0);
 					return setScheduleIndex($scope.scheduleIndex);
 				});
 			}
@@ -215,12 +216,13 @@ app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Select
 			});
 		};
 
-		$scope.allPeriods = function(schedules, short_or_long){
+		$scope.allPeriods = function(schedules){
 			$scope.scheduleIndex = 0;
-                        if (typeof $scope.allSchedules != 'undefined' &&  $scope.allSchedules.length > 0)
+                        if (typeof $scope.allSchedules != 'undefined' &&  $scope.allSchedules.length > 0){
 				$scope.schedules = $scope.allSchedules;
 				updateUI($scope.allSchedules);
                        		$scope.$apply();
+                        }
 		};
 
 		$scope.remove_just_added = function(course){course.just_added = false};

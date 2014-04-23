@@ -361,9 +361,7 @@ def assignPointsForGaps(schedule):
     points = []
     for t1, t2, in zip(schedule,schedule[1:]):
         gap = t2[0] - t1[1]
-        print gap
-        if gap<18:
-	    points.append(pow(1, 1.0/(gap/6.0)))
+        points.append(pow(.5, (gap-1)/6.0))
     return points
 
 def sortSchedulesByGaps(schedules):
@@ -376,7 +374,9 @@ def sortSchedulesByGaps(schedules):
 def getShortOrLongPeriods(request):
     schedules = json.loads(request.GET.get("schedules", None))
     periods = sortSchedulesByGaps(schedules)
-    if request.GET.get("short_or_long", None) == "short":
+    if len(periods) == 1:
+        shortOrLongPeriods = periods
+    elif request.GET.get("short_or_long", None) == "short":
     	shortOrLongPeriods = periods[:len(periods)/2]
     else:
 	shortOrLongPeriods = periods[len(periods)/2:]
