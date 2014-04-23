@@ -377,7 +377,7 @@ def getShortOrLongPeriods(request):
     schedules = json.loads(request.GET.get("schedules", None))
     periods = sortSchedulesByGaps(schedules)
     if request.GET.get("short_or_long", None) == "short":
-    	shortOrLongPeriods = periods[len(periods)/2:]
+    	shortOrLongPeriods = periods[:len(periods)/2]
     else:
-	shortOrLongPeriods = periods[:len(periods)/2]
+	shortOrLongPeriods = periods[len(periods)/2:]
     return HttpResponse(json.dumps(shortOrLongPeriods))

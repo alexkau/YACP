@@ -193,7 +193,9 @@ app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Select
 
 		$scope.shortOrLongPeriods = function(schedules, short_or_long){
 			$scope.scheduleIndex = 0;
-			var all_class_times = getAllClassTimes(schedules);
+			if (typeof $scope.allSchedules == 'undefined' &&  schedules.length > 0)
+                        	$scope.allSchedules= schedules.slice(0);
+			var all_class_times = getAllClassTimes($scope.allSchedules);
 			$.ajax({
 				type: "GET",
 				url: "/semesters/schedules/getShortOrLongPeriods/",
@@ -205,9 +207,10 @@ app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Select
 				success: function(result) {
 					var updated_schedules=new Array();
 					for (var i = 0; i < result.length; i++)
-						updated_schedules.push(schedules[result[i]]);
+						updated_schedules.push($scope.allSchedules[result[i]]);
 					$scope.schedules= updated_schedules;
 					updateUI(updated_schedules);
+                                        $scope.$apply();
 				}
 			});
 		};
