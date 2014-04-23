@@ -214,6 +214,15 @@ app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Select
 				}
 			});
 		};
+
+		$scope.allPeriods = function(schedules, short_or_long){
+			$scope.scheduleIndex = 0;
+                        if (typeof $scope.allSchedules != 'undefined' &&  $scope.allSchedules.length > 0)
+				$scope.schedules = $scope.allSchedules;
+				updateUI($scope.allSchedules);
+                       		$scope.$apply();
+		};
+
 		$scope.remove_just_added = function(course){course.just_added = false};
 		$scope.addCourseToPlanner = function(course){
 			console.log(course);
