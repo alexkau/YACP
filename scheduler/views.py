@@ -24,7 +24,8 @@ from scheduler.scheduling import compute_schedules
 
 import math
 
-ICAL_PRODID = getattr(settings, 'SCHEDULER_ICAL_PRODUCT_ID', '-//Jeff Hui//YACS Export 1.0//EN')
+ICAL_PRODID = getattr(
+    settings, 'SCHEDULER_ICAL_PRODUCT_ID', '-//Jeff Hui//YACS Export 1.0//EN')
 SECTION_LIMIT = getattr(settings, 'SECTION_LIMIT', 60)
 
 
@@ -36,26 +37,34 @@ def compute_selection_dict(sids):
 
 
 class SelectionSelectedCoursesListView(SelectedCoursesListView):
+
     def get_context_data(self, **kwargs):
-        context = super(SelectionSelectedCoursesListView, self).get_context_data(**kwargs)
-        selection = context['selection'] = models.Selection.objects.get(id=self.kwargs.get('id'))
-        context['raw_selection'] = dumps(compute_selection_dict(selection.section_ids))
+        context = super(
+            SelectionSelectedCoursesListView, self).get_context_data(**kwargs)
+        selection = context['selection'] = models.Selection.objects.get(
+            id=self.kwargs.get('id'))
+        context['raw_selection'] = dumps(
+            compute_selection_dict(selection.section_ids))
         return context
 
 
 class ResponsePayloadException(Exception):
+
     "This exception is raised if a special form of HttpResponse is wanted to be returned (eg - JSON error response)."
+
     def __init__(self, response):
         self.response = response
         super(ResponsePayloadException, self).__init__('')
 
 
 class ExceptionResponseMixin(object):
+
     """Handles ResponsePayloadExceptions appropriately.
 
     If the view throws a ResponsePayloadException, then the raise Response is used instead of the traditional
     HttpResponse object.
     """
+
     def dispatch(self, *args, **kwargs):
         try:
             return super(ExceptionResponseMixin, self).dispatch(*args, **kwargs)
@@ -64,7 +73,9 @@ class ExceptionResponseMixin(object):
 
 
 class ConflictMixin(SemesterBasedMixin):
+
     "Provides the view with helper methods to acquire the conflicted sections."
+
     def conflict_mapping(self, conflicts):
         """Returns a dictionary of section id to a frozen set of section ids
         that conflict with the given section.
@@ -74,7 +85,8 @@ class ConflictMixin(SemesterBasedMixin):
     def get_sections_by_crns(self, crns):
         "Returns all sections with the provided CRNs."
         year, month = self.get_year_and_month()
-        queryset = models.SectionProxy.objects.by_crns(crns, year=year, month=month)
+        queryset = models.SectionProxy.objects.by_crns(
+            crns, year=year, month=month)
         queryset = queryset.select_related('course', 'course__department')
         return queryset.by_semester(year, month).prefetch_periods()
 
@@ -84,7 +96,8 @@ class ConflictMixin(SemesterBasedMixin):
         the given section.
         """
         section_ids = set(s.id for s in sections)
-        conflict_mapping = models.SectionConflict.objects.as_dictionary(section_ids)
+        conflict_mapping = models.SectionConflict.objects.as_dictionary(
+            section_ids)
         empty_set = frozenset()  # saves memory
         for section in sections:
             section.conflicts = conflict_mapping.get(section.id) or empty_set
@@ -149,7 +162,8 @@ class ComputeSchedules(ConflictMixin, ExceptionResponseMixin, TemplateView):
             for schedule in compute_schedules(selected_courses, free_sections_only=False, generator=True):
                 raise ResponsePayloadException(HttpResponse('ok'))
             raise ResponsePayloadException(HttpResponseNotFound('conflicts'))
-        schedules = compute_schedules(selected_courses, start=self.get_savepoint(), free_sections_only=False, generator=True)
+        schedules = compute_schedules(selected_courses, start=self.get_savepoint(
+        ), free_sections_only=False, generator=True)
 
         try:
             limit = int(self.request.GET.get('limit'))
@@ -248,7 +262,8 @@ class ComputeSchedules(ConflictMixin, ExceptionResponseMixin, TemplateView):
         return results
         # above is equivalent to below, but the one below is only for
         # python 2.7+, and not python 2.6
-        #return [{ str(course.id): section.crn for course, section in schedule.items() } for schedule in schedules]
+        # return [{ str(course.id): section.crn for course, section in
+        # schedule.items() } for schedule in schedules]
 
     def prep_courses_and_sections_for_context(self, selected_courses):
         """Returns all the database model objects for JSON-friendly output.
@@ -257,7 +272,8 @@ class ComputeSchedules(ConflictMixin, ExceptionResponseMixin, TemplateView):
         """
         courses_output, sections_output = {}, {}
         for course, sections in selected_courses.items():
-            courses_output[course.id] = course.toJSON(select_related=((Department._meta.db_table, 'code'),))
+            courses_output[course.id] = course.toJSON(
+                select_related=((Department._meta.db_table, 'code'),))
             for section in sections:
                 sections_output[section.crn] = section.toJSON()
         return courses_output, sections_output
@@ -283,7 +299,8 @@ class ComputeSchedules(ConflictMixin, ExceptionResponseMixin, TemplateView):
         if len(schedules_output):
             periods = set(p for s in sections for p in s.get_periods())
             timerange, dows = self.period_stats(periods)
-            courses_output, sections_output = self.prep_courses_and_sections_for_context(selected_courses)
+            courses_output, sections_output = self.prep_courses_and_sections_for_context(
+                selected_courses)
             context = {
                 'time_range': timerange,
                 'dows': DAYS,
@@ -307,6 +324,7 @@ class ComputeSchedules(ConflictMixin, ExceptionResponseMixin, TemplateView):
 
 
 class JsonComputeSchedules(AjaxJsonResponseMixin, ComputeSchedules):
+
     "Simply provides a JSON output format for the ComputeSchedules view."
     json_content_prefix = ''
 
@@ -357,27 +375,40 @@ def icalendar(request):
     response['Content-Disposition'] = 'attachment;filename=schedule.ics'
     return response
 
+# Point values are proportionate to the time gap between two
+# chronically-adjacent classes
+
+
 def assignPointsForGaps(schedule):
     points = []
-    for t1, t2, in zip(schedule,schedule[1:]):
+    for t1, t2, in zip(schedule, schedule[1:]):
         gap = t2[0] - t1[1]
-        points.append(pow(.5, (gap-1)/6.0))
+        # Exponential decay of point values as gap increases
+        points.append(pow(.5, (gap - 1) / 6.0))
     return points
 
+
 def sortSchedulesByGaps(schedules):
-    sorted_schedules=[]
+    sorted_schedules = []
     for i, schedule in enumerate(schedules):
-	sorted_schedules.append((sum(assignPointsForGaps(sorted(schedule))), i))
+        # Store each schedule's chunkiness and index
+        sorted_schedules.append(
+            (sum(assignPointsForGaps(sorted(schedule))), i))
+    # Sort schedules by chunkiness
     sorted_schedules.sort()
-    return  [i[1] for i in sorted_schedules]
+    return [i[1] for i in sorted_schedules]
+
 
 def getShortOrLongPeriods(request):
     schedules = json.loads(request.GET.get("schedules", None))
     periods = sortSchedulesByGaps(schedules)
+    # If there is only one period, return that period
     if len(periods) == 1:
         shortOrLongPeriods = periods
+    # The first half of schedules (less chunky) correspond to short periods
     elif request.GET.get("short_or_long", None) == "short":
-    	shortOrLongPeriods = periods[:len(periods)/2]
+        shortOrLongPeriods = periods[:len(periods) / 2]
+    # The second half of schedules (chunkier) correspond to long periods
     else:
-	shortOrLongPeriods = periods[len(periods)/2:]
+        shortOrLongPeriods = periods[len(periods) / 2:]
     return HttpResponse(json.dumps(shortOrLongPeriods))

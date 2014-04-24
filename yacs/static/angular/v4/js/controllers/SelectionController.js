@@ -85,8 +85,10 @@ app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Select
 		}
 
 		function addClassTime(class_times, class_time){
+                        // compute start and end of a class in number of 10 minute chunks passed since the beginning of the week
 			var start = class_time[0][0] * (24 * 6) + (6) * class_time[0][1] + (class_time[0][2] / 10);
 			var end = class_time[1][0] * (24 * 6)+ (6) * class_time[1][1] + (class_time[1][2] / 10);
+                        // if time already exists in array of times, don't add it
 			for (var i = 0; i < class_times.length; i++){
 				if(class_times[i][0] == start || class_times[i][1] == end)
 					return;
@@ -94,6 +96,10 @@ app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Select
 			class_times.push(new Array(start, end));
 		}
 
+                /* 
+                 * surf through nested object to retrieve start and end times of each section 
+                 * add to array of [start, end] arrays
+                 */
 		function getAllClassTimes(schedules){
 			var all_class_times = new Array();
 			for (var i = 0; i < schedules.length; i++) {
@@ -194,6 +200,7 @@ app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Select
 
 		$scope.shortOrLongPeriods = function(schedules, short_or_long){
 			$scope.scheduleIndex = 0;
+                        // save copy of all schedules if it hasn't been done yet
 			if (typeof $scope.allSchedules == 'undefined' &&  schedules.length > 0)
                         	$scope.allSchedules= schedules.slice(0);
 			var all_class_times = getAllClassTimes($scope.allSchedules);
@@ -206,6 +213,7 @@ app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Select
 				},
 				dataType: "json",
 				success: function(result) {
+                                        // update the set of schedules in accordance to array of indeces received
 					var updated_schedules=new Array();
 					for (var i = 0; i < result.length; i++)
 						updated_schedules.push($scope.allSchedules[result[i]]);
@@ -218,6 +226,7 @@ app.controller('SelectionCtrl', ['$window', '$scope', '$q', '$location', 'Select
 
 		$scope.allPeriods = function(schedules){
 			$scope.scheduleIndex = 0;
+                        // set displayed schedules to backup of all schedules
                         if (typeof $scope.allSchedules != 'undefined' &&  $scope.allSchedules.length > 0){
 				$scope.schedules = $scope.allSchedules;
 				updateUI($scope.allSchedules);
