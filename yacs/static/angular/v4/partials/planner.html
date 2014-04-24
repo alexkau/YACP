@@ -1,4 +1,20 @@
 <div ng-if="logged_in" style="float:left">
+    <table class="planner-wrapper leftcol">
+        <tr>
+            <th></th>
+            <th class="semester-name" ng-repeat="semester_name in semester_names"><span>{{semester_name}}</span></th>
+        </tr>
+        <tr ng-repeat="year in years" class="planner-row">
+            <td class="planner-col"><span class="year">{{year}}</span></td>
+            <td ng-repeat="semester in semester_ids" class="planner-col multiSortable semester" data-year={{year}} data-semester={{semester}}>
+                <div class="planner-course"  ng-repeat="course in courses | filter: {year: year, semester: ''+semester}" ng-class="{'immovable': !course.movable}" data-credits={{course.credits}}>
+                    <span class="courseinfo">{{course.department_code}} {{course.prefix}}</span>
+                    <span class="credits">{{course.credits}} credits</span>
+                    <span class="difficulty" ng-if="course.fall_difficulty != 'None'">{{course.fall_difficulty}} easiness</span>
+                </div>
+            </td>
+        </tr>
+    </table>
     <div class="rightcol">
         <div class="rightcontent">
             <div ng-if="has_capp" class="not-in-planner">
@@ -18,21 +34,5 @@
             <a href="" ng-click="showCAPPUploadForm()">Upload CAPP Report</a>
         </div>
     </div>
-    <table class="planner-wrapper leftcol">
-        <tr>
-            <th></th>
-            <th class="semester-name" ng-repeat="semester_name in semester_names"><span>{{semester_name}}</span></th>
-        </tr>
-        <tr ng-repeat="year in years" class="planner-row">
-            <td class="planner-col"><span class="year">{{year}}</span></td>
-            <td ng-repeat="semester in semester_ids" class="planner-col multiSortable semester" data-year={{year}} data-semester={{semester}}>
-                <div class="planner-course"  ng-repeat="course in courses | filter: {year: year, semester: ''+semester}" ng-class="{'immovable': !course.movable}" data-credits={{course.credits}}>
-                    <span class="courseinfo">{{course.department_code}} {{course.prefix}}</span>
-                    <span class="credits">{{course.credits}} credits</span>
-                    <span class="difficulty" ng-if="course.fall_difficulty != 'None'">{{course.fall_difficulty}} easiness</span>
-                </div>
-            </td>
-        </tr>
-    </table>
 </div>
 <div ng-if="!logged_in">Please log in.</div>

@@ -55,14 +55,9 @@
 .leftcol {
 	float: left;
 	width: 1049px;
-	margin-left: -100%;
 }
 .rightcol {
 	float: left;
-	width: 100%;
-	display: block;
-	padding: 20px;
-}
-.rightcontent {
-	margin-left: 1050px;
+	width: 500px;
+	padding-left: 20px;
 }
