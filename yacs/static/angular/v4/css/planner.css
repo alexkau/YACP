@@ -29,6 +29,7 @@
 	background: #efefef;
 	margin: 5px;
 	width: 318px;
+	cursor: pointer;
 }
 .planner-course.immovable {
 	background: #ddd;
@@ -58,6 +59,6 @@
 }
 .rightcol {
 	float: left;
-	width: 500px;
+	width: 450px;
 	padding-left: 20px;
 }
