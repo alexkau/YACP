@@ -5,7 +5,9 @@
                 <h1>Courses not in planner:</h1>
                 <div class='multiSortable' id='planner-courses'>
                     <div class="planner-course" ng-repeat="course in courses | filter: { semester: -1 }" data-credits={{course.credits}}>
-                        {{course.department_code}} {{course.prefix}} {{course.fall_difficulty}}
+                        <span class="courseinfo">{{course.department_code}} {{course.prefix}}</span>
+                        <span class="credits">{{course.credits}} credits</span>
+                        <span class="difficulty" ng-if="course.fall_difficulty != 'None'">{{course.fall_difficulty}} easiness</span>
                     </div>
                 </div>
                 <h2>Use the catalog to add courses here</h2>
