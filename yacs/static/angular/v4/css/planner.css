@@ -29,6 +29,8 @@
 	background: #efefef;
 	margin: 5px;
 	width: 318px;
+}
+.planner-course:not(.immovable) {
 	cursor: pointer;
 }
 .planner-course.immovable {
