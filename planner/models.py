@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
-from courses.models import Course, Department
+from courses.models import Course
+from courses.models import  Department
 from scheduler.models import SavedSelection
 from django.db.models.signals import post_save
 
-
+# PlanUser holds a user's data related to the planner
 class PlanUser(models.Model):
     user = models.OneToOneField(User, related_name="planuser")
     selections = models.ForeignKey(SavedSelection, null=True, blank=True)
@@ -16,6 +17,7 @@ class PlanUser(models.Model):
         return self.user.username
     # TODO: unmet requirements
 
+# PlanCourse is a course in the PlanUser's planner.
 class PlanCourse(models.Model):
     semester = models.IntegerField()
     year = models.IntegerField()
