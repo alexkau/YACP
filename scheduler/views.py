@@ -411,4 +411,5 @@ def getShortOrLongPeriods(request):
     # The second half of schedules (chunkier) correspond to long periods
     else:
         shortOrLongPeriods = periods[len(periods) / 2:]
+        shortOrLongPeriods.reverse()
     return HttpResponse(json.dumps(shortOrLongPeriods))
