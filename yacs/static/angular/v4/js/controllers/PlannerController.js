@@ -31,6 +31,7 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
         $scope.has_capp = true;
     });
 
+    // Sends a request to the server with the details of which course was just dropped where
     var sendReceiveRequest = function(event, ui) {
         var item = ui.item.context;
         var course = item.innerText;
@@ -54,11 +55,9 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
 
         // Move course in DB to new location
         var res = $.post( "/planner/move_course", { course: course, semester: semester, year: year });
-        // res.done(function( data ) {
-        //     console.log(data);
-        // });
     };
 
+    // Sends a request to the server with the details of the course that we're about to remove
     var sendDeleteRequest = function(event, ui) {
         var item = ui.item.context;
         var course = item.innerText;
@@ -73,6 +72,7 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
         $(item).remove();
     };
 
+    // Initialize the sortables
     var initSorting = function() {
         $('.multiSortable.planner-col').each(function() {
             var currentYear = (new Date).getFullYear();
@@ -93,7 +93,7 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
                 }
             }
         });
-        // Init sortables
+        // Actually init sortables
         $('.multiSortable').sortable({
             items: '> div:not(.immovable)',
             connectWith: '.multiSortable',
