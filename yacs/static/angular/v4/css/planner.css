@@ -74,3 +74,14 @@
 	width: 400px;
 	padding-left: 20px;
 }
+
+#login-wrapper {
+	margin: 40px auto;
+	display: block;
+	width: 600px;
+	text-align: center;
+}
+#login-wrapper h2 {
+	font-size: 1.5em;
+	margin-bottom: 10px;
+}
