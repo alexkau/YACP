@@ -22,7 +22,17 @@
 	background: #ddd;
 	min-height: 100px;
 	width: 330px;
+	margin: 20px 0;
 }
+
+#planner-delete {
+	border: 1px solid #666;
+	background: #ddd;
+	min-height: 100px;
+	width: 330px;
+	padding: 20px;
+}
+
 .planner-course {
 	padding: 3px;
 	border: 1px solid #aaa;

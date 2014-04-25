@@ -32,7 +32,6 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
     });
 
     var sendReceiveRequest = function(event, ui) {
-        $(".alert").alert();
         var item = ui.item.context;
         var course = item.innerText;
 
@@ -58,6 +57,20 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
         // res.done(function( data ) {
         //     console.log(data);
         // });
+    };
+
+    var sendDeleteRequest = function(event, ui) {
+        var item = ui.item.context;
+        var course = item.innerText;
+        if($(item).parent().attr("id") == "planner-courses") {
+            var semester = -1;
+            var year = -1;
+        } else {
+            var semester = $(item).closest("td").index()-1;
+            var year = $(item).parent().parent().children(":first")[0].innerText;            
+        }
+        var res = $.post( "/planner/remove_course", { course: course, semester: semester, year: year });
+        $(item).remove();
     };
 
     var initSorting = function() {
@@ -86,6 +99,9 @@ app.controller('PlannerCtrl', ['$scope', '$location','$http','urlProvider','sear
             connectWith: '.multiSortable',
             receive: sendReceiveRequest,
         });
+        $('#planner-delete').sortable({
+            receive: sendDeleteRequest,
+        })
     };
 
     // Don't look. Nothing here to see. Move along.

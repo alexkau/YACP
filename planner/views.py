@@ -40,7 +40,8 @@ def addCourseTaken(request, x):
     x.course_number = x.name.split(" ")[1]
     x.year = x.term[:-2]
     x.semester = map_month_to_semester(int(x.term[-2:]))
-    credits = Course.objects.filter(number=x.course_number, department__code=x.department_prefix)[:1].get().min_credits
+    credits = Course.objects.filter(number=x.course_number, 
+        department__code=x.department_prefix)[:1].get().min_credits
     department = Department.objects.get(code=x.department_prefix)
     new_plan_course = PlanCourse(
         year=x.year, semester=x.semester,
@@ -49,12 +50,15 @@ def addCourseTaken(request, x):
         credits=credits
     )
     new_plan_course.save()
-    fall_difficulty = getDifficulty("Fall", x.course_number, x.department_prefix)
-    spring_difficulty = getDifficulty("Spring", x.course_number, x.department_prefix)
+    fall_difficulty = getDifficulty("Fall", x.course_number,
+        x.department_prefix)
+    spring_difficulty = getDifficulty("Spring", x.course_number,
+        x.department_prefix)
     new_plan_course.fall_difficulty = fall_difficulty
     new_plan_course.spring_difficulty = spring_difficulty
     new_plan_course.save()
-# view that takes in a CAPP report and adds each course in the report to the database
+
+# takes in a CAPP report and adds each course in the report to the database
 def addCoursesTaken(request):
     if not request.user.is_authenticated():
         return HttpResponse("Please log in.")
@@ -78,7 +82,7 @@ def addCoursesTaken(request):
             threads = []
 
             for x in courses_taken:
-                thread = Thread(target = addCourseTaken, args = (request, x, ))
+                thread = Thread(target=addCourseTaken, args=(request, x))
                 thread.start()
                 threads.append(thread)
 
@@ -99,7 +103,7 @@ def moveCourse(request):
     course_prefix = request.POST["course"].split(" ")[0]
     course_number = int(request.POST["course"].split(" ")[1])
     department = Department.objects.get(code=course_prefix)
-    plan_course = request.user.planuser.planner_courses.get(number=course_number,department=department)
+    plan_course = request.user.planuser.planner_courses.get(number=course_number, department=department)
     # add the course to the database
     semester = request.POST["semester"]
     year = request.POST["year"]
@@ -127,8 +131,8 @@ def addCourse(request):
     if exists:
         return HttpResponse("already in planner")
     credits = Course.objects.filter(number=course_number, department=department)[:1].get().min_credits
-    plan_course = PlanCourse(user=request.user.planuser,number=course_number,department=department,
-        year=year,semester=semester,credits=credits)
+    plan_course = PlanCourse(user=request.user.planuser,number=course_number, department=department,
+        year=year, semester=semester, credits=credits)
     # add course to db before making request to RateMyProfessor
     plan_course.save()
     # find out course difficulty and save to db
@@ -155,6 +159,6 @@ def removeCourse(request):
     semester = request.POST["semester"]
     year = request.POST["year"]
     department = Department.objects.get(code=course_prefix)
-    plan_course = request.user.planuser.planner_courses.get(number=course_number,department=department)
+    plan_course = request.user.planuser.planner_courses.get(number=course_number, department=department)
     plan_course.delete()
     return HttpResponse("success")
