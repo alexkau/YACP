@@ -1,41 +1,59 @@
 <div ng-if="logged_in" style="float:left">
-    <table class="planner-wrapper leftcol">
-        <tr>
-            <th></th>
-            <th class="semester-name" ng-repeat="semester_name in semester_names"><span>{{semester_name}}</span></th>
-        </tr>
-        <tr ng-repeat="year in years" class="planner-row">
-            <td class="planner-col"><span class="year">{{year}}</span></td>
-            <td ng-repeat="semester in semester_ids" class="planner-col multiSortable semester" data-year={{year}} data-semester={{semester}}>
-                <div class="planner-course"  ng-repeat="course in courses | filter: {year: year, semester: ''+semester}" ng-class="{'immovable': !course.movable}" data-credits={{course.credits}}>
-                    <span class="courseinfo">{{course.department_code}} {{course.prefix}}</span>
-                    <span class="credits">{{course.credits}} credits</span>
-                    <span class="difficulty" ng-if="course.fall_difficulty != 'None'">{{course.fall_difficulty}} easiness</span>
-                </div>
-            </td>
-        </tr>
-    </table>
-    <div class="rightcol">
-        <div class="rightcontent">
-            <div ng-if="has_capp" class="not-in-planner">
-                <h1>Courses not in planner:</h1>
-                <div class='multiSortable' id='planner-courses'>
-                    <div class="planner-course" ng-repeat="course in courses | filter: { semester: -1 }" data-credits={{course.credits}}>
+    <div ng-if="has_capp">
+        <table class="planner-wrapper leftcol">
+            <tr>
+                <th></th>
+                <th class="semester-name" ng-repeat="semester_name in semester_names"><span>{{semester_name}}</span></th>
+            </tr>
+            <tr ng-repeat="year in years" class="planner-row">
+                <td class="planner-col"><span class="year">{{year}}</span></td>
+                <td ng-repeat="semester in semester_ids" class="planner-col multiSortable semester" data-year={{year}} data-semester={{semester}}>
+                    <div class="planner-course"  ng-repeat="course in courses | filter: {year: year, semester: ''+semester}" ng-class="{'immovable': !course.movable}" data-credits={{course.credits}}>
                         <span class="courseinfo">{{course.department_code}} {{course.prefix}}</span>
                         <span class="credits">{{course.credits}} credits</span>
                         <span class="difficulty" ng-if="course.fall_difficulty != 'None'">{{course.fall_difficulty}} easiness</span>
                     </div>
+                </td>
+            </tr>
+        </table>
+        <div class="rightcol">
+            <div class="rightcontent">
+                <div ng-if="has_capp" class="not-in-planner">
+                    <h1>Courses not in planner</h1><br>
+                    <h2>Use the catalog to add courses to the planner.</h2>
+                    <div class='multiSortable' id='planner-courses'>
+                        <div class="planner-course" ng-repeat="course in courses | filter: { semester: -1 }" data-credits={{course.credits}}>
+                            <span class="courseinfo">{{course.department_code}} {{course.prefix}}</span>
+                            <span class="credits">{{course.credits}} credits</span>
+                            <span class="difficulty" ng-if="course.fall_difficulty != 'None'">{{course.fall_difficulty}} easiness</span>
+                        </div>
+                    </div>
+                    <div class='multiSortable' id='planner-delete'>
+                        Drag courses here to delete them from the planner.
+                    </div>
                 </div>
-                <div class='multiSortable' id='planner-delete'>
-                    Drag courses here to delete them from the planner.
-                </div>
-                <h2>Use the catalog to add courses here</h2>
+                <br>
+                You have already uploaded a CAPP report. Uploading a new one will delete your current data!
+                <button href="" ng-click="showCAPPUploadForm()">Re-Upload CAPP Report</button>
             </div>
-            <br>
-            <!--<div ng-if="!has_capp"><a href="" ng-click="showCAPPUploadForm()">Upload CAPP Report</a></div>-->
-            <div ng-if="has_capp">You have already uploaded a CAPP report. Uploading a new one will delete your current data!</div>
-            <a href="" ng-click="showCAPPUploadForm()">Upload CAPP Report</a>
+        </div>
+    </div>
+    <div ng-if="!has_capp">
+        <div class="leftcol">
+            You have not uploaded a CAPP report. In order to use the planner, you must first upload your CAPP report.
+            <ul style="list-style-type:disc;margin:10px 20px;line-height:1.25em;">
+                <li>Sign in to <a target="_blank" href="http://sis.rpi.edu/">SIS</a>.</li>
+                <li>Click on the Student Menu.</li>
+                <li>Select "View CAPP Reports".</li>
+                <li>Submit the form. (The menu will default to the most recent CAPP report.)</li>
+                <li>Press ctrl-s (cmd-s on a Mac), and save the file as "Webpage, HTML Only" or equivalent, depending on your browser.</li>
+                <li>Return to this page, and click the "Upload CAPP Report" button.</li>
+                <li>Select the saved CAPP report and click the Upload button. The process of uploading and parsing the CAPP report will take several seconds.</li>
+            </ul>
+        </div>
+        <div class="rightcol">
+            <button href="" ng-click="showCAPPUploadForm()">Upload CAPP Report</button>
         </div>
     </div>
 </div>
-<div ng-if="!logged_in">Please log in.</div>
+<div ng-if="!logged_in">Please log in before using the planner.</div>
